@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LOGIN성공</title>
+</head>
+<body bgcolor='yellow'>
+  <h1>LOGIN했습니다.</h1>
+</body>
+</html>

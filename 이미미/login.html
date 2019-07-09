@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LOGIN하기</title>
+</head>
+<body>
+  <h1>LOGIN</h1>
+  <form action="/users/uns1/login2" method="post">
+    <table>
+      <tr>
+        <td>ID : </td>
+        <td><input type="text" name="userName"></td>
+      </tr>
+      <tr>
+        <td>PASSWORD : </td>
+        <td><input type="password" name="password"></td>
+      </tr>
+      <tr>
+        <td><input type="submit" value="로그인"></td>
+      </tr>
+   </table>
+  </form>
+  <form action="/users/find" method="post">
+    <table>
+      <tr>
+        <td><input type="submit" value="아이디/비밀번호찾기"></td>
+      </tr>
+    </table>
+  <form action="/users/join" method="post">
+    <table>
+      <tr>
+        <td><input type="submit" value="회원가입"></td>
+      </tr>
+    </table>
+
+</body>
+</html>
