@@ -7,7 +7,7 @@ function send404Message(response){
 }
  
 function onRequest(request, response){
- 
+ //request.method == 'GET' && 
     if(request.url == '/'){
         response.writeHead(200,{"Content-Type":"text/html"});
         fs.createReadStream("./login.html").pipe(response);
@@ -32,14 +32,3 @@ function send404Message(response){
     response.write("404 ERROR... ");
     response.end();
 }
-
-
-
-
-/*
-var server=http.createServer(function(req,res){
-
-    
-    res.write('<html><body><h1>LOGIN</h1></body></html>');
-    res.end();
-}).listen(3000);*/
