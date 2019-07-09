@@ -8,11 +8,17 @@ function send404Message(response){
  
 function onRequest(request, response){
  
-    if(request.method == 'GET' && request.url == '/'){
+    if(request.url == '/'){
         response.writeHead(200,{"Content-Type":"text/html"});
         fs.createReadStream("./login.html").pipe(response);
  
-    } else {
+    } else if(request.url == '/login2.html'){
+        response.writeHead(200,{"Content-Type":"text/html"});
+        fs.createReadStream("./login2.html").pipe(response);
+ 
+    }
+    else
+    {
         send404Message(response);
  
     }
