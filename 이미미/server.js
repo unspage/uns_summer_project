@@ -1,5 +1,6 @@
 var http=require('http');
 var fs=require('fs');
+
 function send404Message(response){
     response.writeHead(404,{"Content-Type":"text/plain"});
     response.write("404 ERROR... ");
@@ -24,6 +25,8 @@ function onRequest(request, response){
     }
  
 }
+
+
 http.createServer(onRequest).listen(3000);
 console.log("Server Created...");
 
