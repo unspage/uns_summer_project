@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+        body {
+            background-image: url(http://p1.pichost.me/i/11/1344899.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .sign_in-form {
+            top: 100%;
+            left: 100%;
+            margin: auto;
+            width: 800px;
+            font-family: Tahoma, Geneva, sans-serif;
+            text-align: center;
+        }
+        .sign_in-form input[type="submit"]  {
+            -webkit-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -moz-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -ms-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -o-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            display: block;
+            margin: 20px auto;
+            max-width: 180px;
+            text-decoration: none;
+            border-radius: 4px;
+            padding: 20px 30px;
+            color: rgba(30, 22, 54, 0.6);
+            box-shadow: rgba(30, 22, 54, 0.4) 0 0px 0px 2px inset;
+        }
+        a {
+            -webkit-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -moz-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -ms-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            -o-transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            transition: all 200ms cubic-bezier(0.390, 0.500, 0.150, 1.360);
+            display: block;
+            margin: 20px auto;
+            max-width: 180px;
+            text-decoration: none;
+            border-radius: 4px;
+            padding: 20px 30px;
+        }
+        a.button {
+            color: rgba(30, 22, 54, 0.6);
+            box-shadow: rgba(30, 22, 54, 0.4) 0 0px 0px 2px inset;
+        }
+        a.button:hover {
+            color: rgba(255, 255, 255, 0.85);
+            box-shadow: rgba(30, 22, 54, 0.7) 0 0px 0px 40px inset;
+        }
+        table.type02 {
+            border-collapse: separate;
+            border-spacing: 0;
+            line-height: 1.5;
+            border-top: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            margin: auto;
+
+        }
+        table.type02 th {
+            width: 150px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            vertical-align: top;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            border-top: 1px solid #fff;
+            border-left: 1px solid #fff;
+            background: #eee;
+        }
+        table.type02 td {
+            width: 500px;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            background: #ffffff
+        }
+    </style>
+</head>
+<body style="background-color:#f0f5f3">
+<div class="sign_in-form">
+    <h1> 회원가입</h1>
+    <form name="signin_pro" action="signin_pro" method="POST">
+        <table class="type02">
+            <tr>
+                <th>아이디 </th>
+                <td>
+                    <input type = "text" name="username"/>
+                    <input type = "button" value = "중복확인"/>
+                </td>
+            </tr>
+            <tr>
+                <th> 비밀번호 </th>
+                <td> <input type = "password" name="password"/> </td>
+            </tr>
+            <tr>
+                <th> 비밀번호 확인 </th>
+                <td> <input type = "password" name="password_chk"/></td>
+            </tr>
+            <tr>
+                <th> 이름 </th>
+                <td> <input type = "text" name="real_name"/> </td>
+            </tr>
+            <tr>
+                <th> 성별 </th>
+                <td>
+                    <input type = "radio" name = "gender" value="M"checked/> 남자
+                    <input type = "radio" name = "gender" value="F"/> 여자
+                </td>
+            </tr>
+            <tr>
+                <th> 이메일 </th>
+                <td>
+                    <input type = "text" name="mail_front"/> @ <input type = "text" name="mail_back"/> &nbsp;&nbsp;
+                    <select>
+                        <option> 직접입력 </option>
+                        <option> naver.com</option>
+                        <option> daum.net</option>
+                        <option> gmail.com</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    <br/>
+        <a class="button" type = "button" onclick="send_signin_info()">가입하기</a>
+        <a class="button" type = "button" onclick="location.href='../node_login/login.html'">취소하기</a>
+    </form>
+    <script>
+        function send_signin_info() {
+            document.signin_pro.submit();
+        }
+    </script>
+    </div>
+</center>
+</body>
+</html>
