@@ -45,15 +45,26 @@
         }
     </style>
 </head>
+<script type="text/javascript">
+    function mySubmit(index)    {
+        if (index == 1) {
+            document.myForm.action="/auth";
+        }
+        if (index == 2)  {
+            document.myForm.action="/signin";
+        }
+        document.myForm.submit();
+    }
+</script>
 <body>
 <div class="login-form">
     <h1>Login Form</h1>
-    <form action="auth" method="POST">
+    <form name='myForm' method="POST">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
-        <input type="submit" name="login_btn" value="로그인">
+        <input type="button" name="login_btn" value="로그인" onclick='mySubmit(1)'>
         <br><br>
-        <input type="button" name="signin_btn" value="회원가입" onclick="location.href='../node_sign/signin.html'">
+        <input type="button" name="signin_btn" value="회원가입" onclick='mySubmit(2)'>
     </form>
 </div>
 </body>

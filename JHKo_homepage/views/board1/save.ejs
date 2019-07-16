@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>board</title>
+</head>
+
+<form name="form1" action="/board1/save" method="post">
+    <table border="1" style="width:600px">
+        <caption>게시판</caption>
+        <colgroup>
+            <col width='15%' />
+            <col width='*%' />
+        </colgroup>
+        <tbody>
+        <tr>
+            <td>작성자</td>
+            <td><input type="text" name="post_writer" size="20" maxlength="20" value="<%=row.username%>"></td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="post_title" size="70" maxlength="250" value="<%=row.post_title%>"></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><textarea name="post_content" rows="5" cols="60"><%=row.post_content%></textarea></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="#" onclick="form1.submit()">저장</a>
+    <input name="post_num" value="<%=row.post_num%>" type="hidden">
+</form>
+</body>
+</html>

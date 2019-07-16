@@ -88,10 +88,21 @@
         }
     </style>
 </head>
+<script type="text/javascript">
+    function mySubmit(index)    {
+        if (index == 1) {
+            document.myForm.action="/signin_pro";
+        }
+        if (index == 2)  {
+            document.myForm.action="/cancel";
+        }
+        document.myForm.submit();
+    }
+</script>
 <body style="background-color:#f0f5f3">
 <div class="sign_in-form">
     <h1> 회원가입</h1>
-    <form name="signin_pro" action="signin_pro" method="POST">
+    <form name='myForm' method="POST">
         <table class="type02">
             <tr>
                 <th>아이디 </th>
@@ -133,14 +144,9 @@
             </tr>
         </table>
     <br/>
-        <a class="button" type = "button" onclick="send_signin_info()">가입하기</a>
-        <a class="button" type = "button" onclick="location.href='../node_login/login.html'">취소하기</a>
+        <a class="button" type = "button" name="signin_btn" value="" onclick='mySubmit(1)'>가입하기</a>
+        <a class="button" type = "button" name="cancel_btn" value="" onclick='mySubmit(2)'>취소하기</a>
     </form>
-    <script>
-        function send_signin_info() {
-            document.signin_pro.submit();
-        }
-    </script>
     </div>
 </center>
 </body>
