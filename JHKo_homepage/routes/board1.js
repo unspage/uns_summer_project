@@ -1,7 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
 var router = express.Router();
-var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
 var pool = require(__dirname + '/sql_con');
@@ -20,6 +19,8 @@ router.get('/home', function(request, response) {
 
 router.get('/list', function(req,res,next){
     console.log('board_list print');
+    console.log('session.username: ' + req.session.username);
+    session_name = req.session.username;
     pool.getConnection(function (err, connection) {
         var sql = "SELECT post_num, post_title, username, post_date" +
             " FROM post_data";
@@ -54,6 +55,15 @@ router.get('/form', function(req,res,next){
         res.render('board1/form', {row: ""});
         return;
     }
+    console.log('board_form print');
+    console.log('session.username: ' + req.session.username);
+    session_name = req.session.username;
+
+    if(session_name==undefined) {
+        alert();
+        res.render('account/login.html');
+    }
+
     pool.getConnection(function (err, connection) {
         var sql = "SELECT post_num, post_title, post_content, username, post_date" +
             " FROM post_data" +

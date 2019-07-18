@@ -4,19 +4,19 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var session = require('express-session');
 var connection = require(__dirname + '/sql_con');
-req.session.loggedIn = true;
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended : true}));
 
 router.get('/', function(request, response) {
-    /*if(req.session.loggedIn)    {
-
+    var username = requuest.body.sername;
+    if(request.session.loggedIn)    {
+        request.session.username = username;
+        response.redirect('/board1/list');
     }
     else    {
-
-    }*/
-    response.sendFile(path.join(__dirname + '/../views/account/login.html'));
+        response.sendFile(path.join(__dirname + '/../views/account/login.html'));
+    }
 });
 
 router.get('/login_page', function(request, response) {
@@ -37,15 +37,21 @@ router.post('/auth', function(request, response) {
                 console.log(results);
                 request.session.loggedin = true;
                 request.session.username = username;
-                response.redirect('/board1/list');
+                console.log('session.username: ' + request.session.username);
+                //var session_name = request.session.username;
+                //var obj = {"session_name":session_name};    //views 폴더에 위치한 html에 오브젝트를 전달
+
+                request.session.save(() =>  {
+                    response.redirect('/board1/list');
+                });
             } else {
                 response.send('Incorrect Username and/or Password!');
+                response.redirect('/');
             }
-            response.end();
         });
     } else {
         response.send('Please enter Username and Password!');
-        response.end();
+        response.render(__dirname + '/../views/account/login.html');
     }
 });
 
