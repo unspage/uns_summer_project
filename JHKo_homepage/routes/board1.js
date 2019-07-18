@@ -4,7 +4,7 @@ var router = express.Router();
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
-var pool = require(__dirname + '/../sql_con');
+var pool = require(__dirname + '/sql_con');
 var session = require('express-session');
 
 router.use(bodyParser.json());

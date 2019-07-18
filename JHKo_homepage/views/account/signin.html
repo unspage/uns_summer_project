@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>회원가입</title>
     <style>
         body {
@@ -91,10 +91,10 @@
 <script type="text/javascript">
     function mySubmit(index)    {
         if (index == 1) {
-            document.myForm.action="/signin_pro";
+            document.myForm.action="/account/signin_pro";
         }
         if (index == 2)  {
-            document.myForm.action="/cancel";
+            document.myForm.action="/account/cancel";
         }
         document.myForm.submit();
     }
