@@ -6,6 +6,7 @@
 </head>
 
 <a href="/board1/form">글쓰기</a>
+<a href="/account/login_page">로그아웃</a>
 
 <table border="1" style="width:600px">
     <caption>게시판</caption>
@@ -31,7 +32,7 @@
     <tr>
         <td><%=rows[i].post_num%></td>
         <td><%=rows[i].username%></td>
-        <td><a href='/board1/read?brdno=<%=rows[i].post_num%>'><%=rows[i].post_title%></a></td>
+        <td><a href='/board1/read?post_num=<%=rows[i].post_num%>'><%=rows[i].post_title%></a></td>
         <td><%=rows[i].post_date%></td>
         <td><%=rows[i].post_views%></td>
     </tr>
