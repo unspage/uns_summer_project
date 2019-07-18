@@ -3,10 +3,12 @@ var fs = require('fs');
 var url = require('url');
 var mysql = require('mysql'); 
 var qs = require('querystring');
+var express=require('express');
+
+
 
 var db = mysql.createConnection({ 
   host     : 'localhost',
-  //port:3000,
   port:3306,
   user     : 'root',
   password : '3819',
@@ -19,6 +21,8 @@ var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
     var pathname = url.parse(_url, true).pathname;
+    var id=queryData.id;
+  var pw=queryData.pw;
 
     if(pathname === '/'){//시작페이지
          var template = `<!DOCTYPE html>
@@ -33,7 +37,7 @@ var app = http.createServer(function(request,response){
              <table>
                <tr>
                  <td>ID : </td>
-                 <td><input type="text" name="ID"></td>
+                 <td><input type="text" name="id"></td>
                </tr>
                <tr>
                  <td>PASSWORD : </td>
@@ -75,30 +79,41 @@ var app = http.createServer(function(request,response){
     }
     else if(pathname === '/login'){//로그인했을때 결과
         var body = '';
+        var dataid='';
+        var datapw='';
+        var n=0;
         request.on('data', function(data){
-           
           body = body + data;
         });
+
         request.on('end',function(){
             var post=qs.parse(body);
-            var id2=post.id;//입력한 id
-            var pw2=post.pw;//입력한 pw
-            db.query(`select * from web.customer where id like '${post.id}' and pw like '${post.pw}'`,function(error, data,id2,pw2){
-                if(error){
-                    throw error;
-                }
-                if(data.length==0)//select의 개수가0이면 로그인성공
-                {
-                response.writeHead(200);
-                response.end('login_fail');//로그인 실패
-                
-            }
-                else{
-                    response.writeHead(200);
-                    response.end('login_success');//로그인 성공
-                }
-            })
+            var dataid=post.id;//입력한 id
+            var datapw=post.pw;//입력한 pw
+        
+         // db.query(`select * from customerwhere id like '${dataid}' and pw like '${datapw}'`,function(error, result,fields ){
 
+            db.query(`SELECT * FROM customer`, function (error, result, fields) {
+              if (error) {
+                  console.log(error);
+              }
+              for(var i=0;i<result.length;i++){
+                if(result[i].id==dataid && result[i].pw==datapw ){
+                  var n=1;          
+                }
+              }
+
+              if(n==1){
+                response.writeHead(200);
+                response.end('login_success');
+              }
+              else{
+                response.writeHead(200);
+                response.end('login_fail');
+              }
+
+              
+            });
         });
           
       
@@ -117,7 +132,7 @@ var app = http.createServer(function(request,response){
              <table>
                <tr>
                  <td>ID : </td>
-                 <td><input type="text" name="ID"></td>
+                 <td><input type="text" name="id"></td>
                </tr>
                <tr>
                  <td>PASSWORD : </td>
@@ -125,7 +140,7 @@ var app = http.createServer(function(request,response){
                </tr>
                <tr>
                  <td>PASSWORD확인 : </td>
-                 <td><input type="password" name="pw확인"></td>
+                 <td><input type="password" name="pw_chk"></td>
                </tr>
                <tr>
                  <td>이름: </td>
@@ -145,9 +160,11 @@ var app = http.createServer(function(request,response){
          </html>`;
         
         response.writeHead(200);
-          response.end(tem);
+        response.end(tem);
     }
-    else if(pathname==='/join_success_fail'){//가입 성공 실패
+
+
+    else if(pathname==='/join_success_fail'){//가입 결과
         var body = '';
         request.on('data', function(data){
           body = body + data;
@@ -156,30 +173,34 @@ var app = http.createServer(function(request,response){
             var post=qs.parse(body);
             var new_id=post.id;//입력한 id
             var new_pw=post.pw;//입력한 pw
-            var new_pw2=post.pw_chk;//입력한 pw확인
+            var new_pw_chk=post.pw_chk;//입력한 pw확인
             var new_user_name=post.user_name;
             var new_email=post.email;
-            db.query(`insert into web.customer values ('${post.id}', '${post.pw}','${post.user_name}', '${post.email}')`,[post.id],[post.pw],[post.user_name],[post.email],function(error, topics){
-                if(error){
-                    throw error;
-                }
-                if(new_pw==new_pw2){//중복아이디 아직 처리안함
-                    response.writeHead(200);
-                    response.end('join_success');
-                }//회원가입 실패
-                else{
-                    response.writeHead(200);
-                    response.end('join_success');
-                    console.log(new_id);
-            }
-            })
+      
+           if(new_pw==new_pw_chk){
+            db.query(`INSERT INTO customer(id, pw, email,user_name) VALUES ('${new_id}', '${new_pw}','${new_email}', '${new_user_name}')`,function(error, result,fields){
+                response.writeHead(200);
+                response.end('join_success');
+            });  
+          }
+          else{
+            response.writeHead(200);
+            response.end('join_fail');
 
-        });
-        
-    }
+          }
+
+          });
+    
+      }//끝
 
     else if(pathname==='/board'){//글목록
-      var tem1=`
+      var body = '';
+      request.on('data', function(data){
+        body = body + data;
+      });
+      request.on('end',function(){
+        var post=qs.parse(body);
+       /* var tem1=`
       <!DOCTYPE html>
        <html lang="en">
        <head>
@@ -201,15 +222,15 @@ var app = http.createServer(function(request,response){
     
              </tr>
           <%
-          for(var i=0;i<rows.length;i++){
+          for(var i=0;i<result.length;i++){
             var oneItem=rows[i];
           %>
             <tr>
-            <td><%=oneItem.idx%></td>
-            <td><%=oneItem.id%></td>
-            <td><%=oneItem.title%></td>
-            <td><%=oneItem.views%></td>
-            <td><%=oneItem.date%></td>
+            <td><%=result.idx%></td>
+            <td><%=result.id%></td>
+            <td><%=result.title%></td>
+            <td><%=result.views%></td>
+            <td><%=result.date%></td>
             <td><input type="submit" value="delete"></td>
             </tr>
           <%
@@ -219,10 +240,26 @@ var app = http.createServer(function(request,response){
          
        </body>
        </html>`;
-      
-      response.writeHead(200);
-      response.end(tem1);
+  
+    */
+      db.query('SELECT *  FROM list', function (error, result, fields){
+          if (error) {
+              console.log('error');
+          }
+            else{
+            response.writeHead(200);
+            response.end('success');
+          }
+
+          for(var i=0;i<result.length;i++){
+            console.log(result[i].idx, result[i].id,result[i].title,result[i].views,result[i].date)
+          }
+        });  
+    
+      }); 
   }
+
+
   else if(pathname=='/board/write'){//글쓰기
     var tem2=`
     <!DOCTYPE html>
@@ -298,4 +335,6 @@ response.end(tem2);
  
  
 });
+  
+//db.end();
 app.listen(3000);
