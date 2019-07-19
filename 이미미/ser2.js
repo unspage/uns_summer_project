@@ -12,7 +12,8 @@ app.get('/', function(req, res){//router로 request처리
     fs.readFile('login.html', function(error, data){
         if(error){
             console.log(error);
-        }else{
+        }
+        else{
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(data);
         }

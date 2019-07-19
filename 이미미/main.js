@@ -4,7 +4,7 @@ var url = require('url');
 var mysql = require('mysql'); 
 var qs = require('querystring');
 var express=require('express');
-
+var ejs=require('ejs');
 
 
 var db = mysql.createConnection({ 
@@ -200,61 +200,65 @@ var app = http.createServer(function(request,response){
       });
       request.on('end',function(){
         var post=qs.parse(body);
-       /* var tem1=`
-      <!DOCTYPE html>
-       <html lang="en">
-       <head>
-         <title>board</title>
-       </head>
-       <body>
-         <h1>board</h1>
-         <a href="http://localhost:3000/board/write">board write</a>
-         <br>
-         <br>
-           <table border="1">
-             <tr>
-               <td>idx </td>
-               <td>id </td>
-               <td>title </td>
-               <td>views </td>
-               <td>date </td>
-               <td>delete</td>
-    
-             </tr>
-          <%
-          for(var i=0;i<result.length;i++){
-            var oneItem=rows[i];
-          %>
-            <tr>
-            <td><%=result.idx%></td>
-            <td><%=result.id%></td>
-            <td><%=result.title%></td>
-            <td><%=result.views%></td>
-            <td><%=result.date%></td>
-            <td><input type="submit" value="delete"></td>
-            </tr>
-          <%
-          }
-          %>
-          </table>
-         
-       </body>
-       </html>`;
-  
-    */
-      db.query('SELECT *  FROM list', function (error, result, fields){
-          if (error) {
-              console.log('error');
-          }
-            else{
-            response.writeHead(200);
-            response.end('success');
-          }
-
-          for(var i=0;i<result.length;i++){
+        db.query('SELECT *  FROM list', function (error, result, fields){
+           for(var i=0;i<result.length;i++){
             console.log(result[i].idx, result[i].id,result[i].title,result[i].views,result[i].date)
           }
+          /*
+          var idx=result[i].idx;
+          var id=result[i].id;
+          var title=result[i].title;
+          var view=result[i].views;
+          var date=result[i].date;
+          var tem1=`
+        <!DOCTYPE html>
+         <html lang="en">
+         <head>
+           <title>board</title>
+         </head>
+         <body>
+           <h1>board</h1>
+           <a href="http://localhost:3000/board/write">board write</a>
+           <br>
+           <br>
+             <table border="1">
+               <tr>
+                 <td>idx </td>
+                 <td>id </td>
+                 <td>title </td>
+                 <td>views </td>
+                 <td>date </td>
+                 <td>delete</td>
+      
+               </tr>
+            <%
+            for(var i=0;i<result.length;i++){
+              var result=result[i];
+            %>
+              <tr>
+              <td>'${idx}'</td>
+              <td>'${id}'</td>
+              <td>'${title}'</td>
+              <td>'${view}'</td>
+              <td>'${date}'</td>
+              <td><input type="submit" value="delete"></td>
+              </tr>
+            <%
+            }
+            %>
+            </table>
+           
+         </body>
+         </html>`;
+
+          response.writeHead(200);
+          response.end(tem1);*/
+          response.writeHead(200);
+          response.end(result);
         });  
+       
+
+   
     
       }); 
   }
