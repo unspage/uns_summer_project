@@ -1,10 +1,33 @@
 var express = require('express');
-
+var mysql = require('mysql');
 var session = require('express-session');
 
 var bodyParser = require('body-parser');//POST 방식 전송을 위해서 필요함
 
 var app = express();
+
+
+var dbConfig = {
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: '123123',
+  database: 'person'
+}
+
+var boardConfig = {
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: '123123',
+  database: 'board'
+}
+
+var conn = mysql.createConnection(dbConfig);
+conn.connect();
+
+var conn2 = mysql.createConnection(boardConfig);
+conn2.connect();
 
 app.use(bodyParser.urlencoded({extended: false}));//미들웨어 등록부분
 
@@ -20,84 +43,126 @@ saveUninitialized: true
 
 }));
 
- 
+var boardRouter = require('./boardRouter.js')
+app.use(boardRouter)
 
-app.post('/auth/login', function(req, res){
+app.post('/login', function(req, res){
 
-var user = {//현재 유저는 한개만 있음
-
-username:'uns',
-
-password:'111'
-
-};
-
-var uname = req.body.username;//POST방식으로 보낸 값을 가져옴
-
+var id = req.body.userEmail;
 var pwd = req.body.password;
+var sql = 'SELECT * FROM users WHERE email=?';
+var user;
+conn.query(sql, [id], function(err, result){
+  if(err){console.log(err);}
+  if(!result[0]){return res.send('please check your id or password');}
+  user = result[0];
+  console.log(result[0]);
+  if(id === user.email && pwd === user.password){//아이디와 패스워드 둘다 같으면
 
-if(uname === user.username && pwd === user.password){//아이디와 패스워드 둘다 같으면
+  res.redirect('/list');
 
-res.redirect('/welcome');
+  }else{//비밀번호가 틀리면
 
-}else{//비밀번호가 틀리면
+  res.send('who are you?<a href="/">login</a>');
 
-res.send('who are you?<a href="/auth/login">login</a>');
+  }
+});
 
-}
 
 });
 
- 
 
-app.get('/auth/login', function(req, res){
+
+app.get('/', function(req, res){
 
 var output = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
 
-<h1>Login</h1>
 
-<form action="/auth/login" method="post">
+  <h3>로그인</h3>
+  <form action="/login" method="post">
+    <table>
+      <tr>
+        <td>이메일 : </td>
+        <td><input type="text" name="userEmail"></td>
+      </tr>
+      <tr>
+        <td>비번 : </td>
+        <td><input type="password" name="password"></td>
+      </tr>
+      <tr>
+        <td><input type="submit" value="로그인"></td>
+      </tr>
+    </table>
+    <tr>
+      <td>
+      <a href=./register>
+      <button type="button">회원가입</button></a></td>
+    </tr>
+  </form>
 
-<p>
 
-<input type="text" name="username" placeholder="username">
-
-</p>
-
-<p>
-
-<input type="password" name="password" placeholder="password">
-
-</p>
-
-<p>
-
-<input type="submit">
-
-</p>
-
-</form>
-
+</body>
+</html>
 `;
-
 res.send(output);
-
 });
 
-app.get('/welcome', function(req, res){
-	var output=`
-	<h1>Hello uns</h1>
-	<form action="/welcome" method="post">
-	<p>
-	<h2>Good Day</h2>
-	</p>
-	</form>
-	`;
-	res.send(output);
+app.get('/register', function(req, res){
+    var output =`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>Document</title>
+    </head>
+    <body>
+      <form action="/register" method="post">
+        name : <input type="text" name="name"><br>
+        email : <input type="text" name="email"><br>
+        password : <input type="text" name="password"><br>
+        <input type="submit">
+      </form>
+    </body>
+    </html>
+    `;
+    res.send(output);
 });
 
-app.listen(3003, function(){
+app.post('/register', function(req, res){
+  var today = new Date();
+  var name = req.body.name;
+  var email = req.body.email;
+  var password = req.body.password;
+  var created = today;
+  var modified = today;
+  conn.query('insert into users (name, email, password, created, modified) values ("'+name+'","'+email+'","'+password+'","'+created+'","'+modified+'")', function(err, result, fields){
+    if(err){console.log(err);}
+    console.log("data inserted!");
+    res.send("register success!");
+  });
+});
 
-console.log('Connected 3003 port!!!');
+app.get('/list', function(req,res){
+  res.redirect('/list/1');
+});
+
+app.get('/list/:page', function(req, res){
+  var query = conn2.query('select title,writer,hit,regdate from list',function(err,rows){
+    if(err){console.log(err);}
+    console.log('rows:'+ rows);
+    res.render('list', {title:'Board List', rows:rows});
+  });
+});
+
+app.listen(3000, function(){
+
+console.log('Connected 3000 port!!!');
 
 });

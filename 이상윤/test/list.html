@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+<h2>게시판</h2>
+
+<a href="/insert">추가하기</a>
+<br>
+<br>
+<p>게시판입니다.</p>
+
+<table class="table table-striped">
+<thead>
+<tr>
+<th>제목</th>
+<th>조회수</th>
+<th>날짜</th>
+<th>글쓴이</th>
+<th>삭제</th>
+<th>수정</th>
+</tr>
+</thead>
+<tbody>
+<% data.forEach(function (item,index){ %>
+<tr>
+<td>
+<a href='/detail/<%= item.title %>'>
+<%= item.title %></a>
+</td>
+<td>
+<%= item.hit %>
+</td>
+<td>
+<%= item.regdate %>
+</td>
+<td>
+<%= item.writer %>
+</td>
+<td>
+<a href="/delete/<%= item.title %>">삭제</a>
+</td>
+<td>
+<a href="/edit/<%= item.title %>">수정</a>
+</td>
+</tr>
+<% })%>
+</tbody>
+</table>
+</div>
+
+
+<br>
+<br>
+
+
+<div class="container">
+<ul class="pager">
+
+
+
+<%
+var curSet = pasing.curSet
+var endPage = pasing.endPage
+var startPage = pasing.startPage
+var totalSet = pasing.totalSet
+var totalPage = pasing.totalPage
+var page_list_size = pasing.page_list_size
+var page_size = pasing.page_size
+var curPage = pasing.curPage
+%>
+
+
+<%
+if(curSet > 1){
+%>
+
+<li value=(startPage -1) class="previous">
+<a href='/list/<%= ( startPage - 1) %>'>이전페이지</a>
+</li>
+
+<%
+}
+%>
+
+
+<%
+for(var i = startPage; i <= endPage; i++){
+if(i > totalPage){break;}
+
+if(i == curPage){
+%>
+<li value=<%= i %> class='' >
+<a href='/list/<%= i %>'>
+<%= i %>
+</a>
+</li>
+
+<%
+}else{
+%>
+
+<li value=<%= i %> class='active' >
+<a href='/list/<%= i %>'>
+<%= i %>
+</a>
+</li>
+
+
+<%
+}
+%>
+
+<%
+}
+%>
+
+<%
+if(curSet < totalSet){
+%>
+<li value=( endPage + 1) class="next">
+<a href='/list/<%= ( endPage + 1) %>'>다음페이지</a>
+</li>
+<%
+}
+%>
+
+</ul>
+</div>
+
+<br>
+<br>
+
+</body>
+
+</html>
