@@ -1,7 +1,7 @@
 const util = require('util');
 const mysql = require('mysql');
 
-const pool = mysql.createPool({
+const pool = mysql.createPool({//mysql연결
     connectionLimit: 10,
     host: 'localhost',
     user: 'root', 
@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 
 pool.getConnection((err, connection) => {
     if(err) 
-        console.error("Something went wrong connecting to the database ...");
+        console.error("database err");
     
     if(connection)
         connection.release();

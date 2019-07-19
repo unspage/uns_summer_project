@@ -1,5 +1,5 @@
 const pool = require('./pool');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');//password저장목적
 
 
 function User() {};

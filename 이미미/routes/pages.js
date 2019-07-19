@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
         return;
     }
  
-    res.render('index', {title:"My application"});
+    res.render('index', {title:"web"});
 })
 
 router.get('/home', (req, res, next) => {
