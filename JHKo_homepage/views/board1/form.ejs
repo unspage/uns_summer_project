@@ -4,7 +4,7 @@
     <title>board</title>
 </head>
 
-<form name="form1" action='/save' method="post">
+<form name="form1" action='/board1/save' method="post">
     <table border="1" style="width:600px">
         <caption>게시판</caption>
         <colgroup>
@@ -27,7 +27,6 @@
         </tbody>
     </table>
     <a href="#" onclick="form1.submit()">저장</a>
-    <input name="post_num" value="<%=row.post_num%>" type="hidden">
 </form>
 </body>
 </html>

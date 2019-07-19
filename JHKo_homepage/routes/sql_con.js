@@ -9,7 +9,8 @@ var connection = mysql.createConnection({
     port: '3306',
     user     : 'root',
     password : 'eclair0829!',
-    database : 'account_data'
+    database : 'account_data',
+    multipleStatements: true
 });
 
 var pool = mysql.createPool({

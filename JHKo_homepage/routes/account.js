@@ -9,7 +9,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended : true}));
 
 router.get('/', function(request, response) {
-    var username = requuest.body.sername;
+    var username = requuest.body.username;
     if(request.session.loggedIn)    {
         request.session.username = username;
         response.redirect('/board1/list');

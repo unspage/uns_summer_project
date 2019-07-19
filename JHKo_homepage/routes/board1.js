@@ -22,7 +22,7 @@ router.get('/list', function(req,res,next){
     console.log('session.username: ' + req.session.username);
     session_name = req.session.username;
     pool.getConnection(function (err, connection) {
-        var sql = "SELECT post_num, post_title, username, post_date" +
+        var sql = "SELECT post_num, post_title, username, post_date, post_views" +
             " FROM post_data";
         connection.query(sql, function (err, rows) {
             if (err) console.error("err : " + err);
@@ -33,12 +33,11 @@ router.get('/list', function(req,res,next){
         });
     });
 });
-
+//향후에 조회수 증가 추가 예정
 router.get('/read', function(req,res,next){
     pool.getConnection(function (err, connection) {
         var sql = "SELECT post_num, post_content, post_title, username, post_date" +
-            " FROM post_data" +
-            " WHERE post_num=" + req.query.post_num;
+            " FROM post_data" + " WHERE post_num=" + req.query.post_num; +
         console.log("rows : " + sql);
         connection.query(sql, function (err, rows) {
             if (err) console.error("err : " + err);
@@ -78,22 +77,18 @@ router.get('/form', function(req,res,next){
 });
 
 router.post('/save', function(req,res,next){
-    var data = [req.body.post_title, req.body.post_content, session.username, req.body.post_num];
+    var data = [req.body.post_title, req.body.post_content, session_name, req.body.post_num];
     console.log("rows : " + data);
+    console.log("post_title: " + req.body.post_title);
+    console.log("post_content " + req.body.post_content);
+    console.log("session_username: " + session_name);
 
     pool.getConnection(function (err, connection) {
-        var sql = "";
-        if (req.body.post_num) {
-            sql = "UPDATE post_data" +
-                " SET post_title=?, username=?, post_content=?" +
-                " WHERE post_num=?";
-        } else {
-            sql = "INSERT INTO post_data(post_title, post_num, username, post_content, post_date) VALUES(?,?,?,?,NOW())";
-        }
+        var sql = "INSERT INTO post_data(post_title, post_content, username, post_date) VALUES('"+req.body.post_title+"','"+req.body.post_content+"','"+session_name+"',NOW())";
         connection.query(sql, data, function (err, rows) {
             if (err) console.error("err : " + err);
 
-            res.redirect('board1/list');
+            res.redirect('list');
             connection.release();
         });
     });
@@ -106,7 +101,7 @@ router.get('/delete', function(req,res,next){
         connection.query(sql, function (err, rows) {
             if (err) console.error("err : " + err);
 
-            res.redirect('board1/list');
+            res.redirect('list');
             connection.release();
         });
     });
