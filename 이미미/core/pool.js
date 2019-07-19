@@ -1,13 +1,11 @@
 const util = require('util');
 const mysql = require('mysql');
-/**
- * Connection to the database.
- *  */
+
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
-    user: 'root', // use your mysql username.
-    password: '3819', // user your mysql password.
+    user: 'root', 
+    password: '3819', 
     database: 'nodejs_login'
 });
 
