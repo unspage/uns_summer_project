@@ -4,8 +4,26 @@ const bcrypt = require('bcrypt');//password저장목적
 
 function User() {};
 
+
 User.prototype = {
    
+    list : function(users=null, callback)
+    {
+        let sql='SELECT num, id, title, views FROM board';
+
+        pool.query(sql, user, function(err, result) {
+            if(err) throw err
+
+            if(result.length) {
+                callback(result[0]);
+            }
+            else {
+                callback(null);
+            }
+        });
+        
+
+    },
     find : function(user = null, callback)
     {
         
@@ -16,24 +34,22 @@ User.prototype = {
        
         let sql = `SELECT * FROM users WHERE ${field} = ?`;
 
-
         pool.query(sql, user, function(err, result) {
             if(err) throw err
 
             if(result.length) {
                 callback(result[0]);
-            }else {
+            }
+            else {
                 callback(null);
             }
         });
     },
 
-    
-    create : function(body, callback) 
+    create : function(body, callback) //회원가입
     {
-
         var pwd = body.password;
-        body.password = bcrypt.hashSync(pwd,10);
+        body.password = bcrypt.hashSync(pwd,10);//password를 해싱하여 변환된 코드 받을 수 있음
 
         var bind = [];
       
@@ -41,23 +57,23 @@ User.prototype = {
             bind.push(body[prop]);
         }
         
-        let sql = `INSERT INTO users(username, fullname, password) VALUES (?, ?, ?)`;
+        let sql = `INSERT INTO users(username, fullname, password) VALUES (?, ?, ?)`;//회원가입
        
         pool.query(sql, bind, function(err, result) {
             if(err) throw err;
-         
+        
             callback(result.insertId);
         });
     },
 
-    login : function(username, password, callback)
+    login : function(username, password, callback)//로그인
     {
        
         this.find(username, function(user) {
          
             if(user) {
                 
-                if(bcrypt.compareSync(password, user.password)) {
+                if(bcrypt.compareSync(password, user.password)) {//입력된 password와 해싱된 코드 user.password를 비교
                     callback(user);
                     return;
                 }  

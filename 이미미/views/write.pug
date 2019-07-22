@@ -2,12 +2,9 @@ extends layout
 
 mixin message(opp, name)
     if(opp)
-        h1.greeting Logged in as 
+        h1.greeting welcome board
             span=name 
-    else 
-        h1.greeting Welcome 
-            span=name 
-            |  to our website
+
 
 
 append links 
@@ -18,3 +15,5 @@ block content
     .dashboard 
         .user 
             +message(opp, name)
+    .register-panel 
+        include includes/board-form
