@@ -27,6 +27,7 @@ router.post('/auth', function(request, response) {
     console.log('Login btn clicked');
     var username = request.body.username;
     var password = request.body.password;
+    var curPage = request.body.curPage;
     console.log('ID: ' + username + ' password: ' + password);
     if (username && password) {
         connection.query('SELECT username, password FROM account_info WHERE username = ? AND password = ?', [username, password], function(error, results, fields)        {
@@ -42,7 +43,7 @@ router.post('/auth', function(request, response) {
                 //var obj = {"session_name":session_name};    //views 폴더에 위치한 html에 오브젝트를 전달
 
                 request.session.save(() =>  {
-                    response.redirect('/board1/list');
+                    response.redirect('/board1/list?cur='+curPage);
                 });
             } else {
                 response.send('Incorrect Username and/or Password!');

@@ -26,5 +26,5 @@ app.use(function(req, res, next)    {
 app.get('/', function(request, response) {
     response.sendFile(path.join(__dirname + '/views/account/login.html'));
 });
-
+console.log("서버 가동");
 app.listen(3000);
