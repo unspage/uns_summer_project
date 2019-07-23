@@ -11,8 +11,14 @@ var connection = mysql.createConnection({
   port :'3306',
   database :'my_db'
 });
-connection.connect();
 
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting : ' + err.stack);
+    return ;
+  }
+  console.log('connected as id '+ connection.threadId);
+});
 
 
 var app = http.createServer(function(request,response){
@@ -69,6 +75,7 @@ var app = http.createServer(function(request,response){
         username = post.id;
         userPW = post.pw;
 
+        var sql =
         connection.query(`SELECT * from user where userId like '${username}' and userPW like '${userPW}'`, function(err, rows, username,userPW) {
         if (err) {
           console.log('Error while performing Query.', err);
@@ -79,8 +86,12 @@ var app = http.createServer(function(request,response){
           if (rows[0] != undefined) {
             console.log('userID = ',rows[0].userId);
             console.log('userPW = ',rows[0].userPW);
-            response.writeHead(200);
-            response.end('success');
+            fs.readFile(`board/HTML.html`,'utf8',function(err,description) {
+              response.writeHead(200);
+              response.end(description);
+            });
+
+
           }
           else {
             console.log('undefined Error ', err);
@@ -146,7 +157,7 @@ var app = http.createServer(function(request,response){
             response.writeHead(200);
             response.end('success');
         }
-        
+
 
 
         });
