@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <title>BOARD</title>
+  <meta charset="utf-8">
+</head>
+
+<style>
+  table {
+    width: 50%;
+  }
+  
+  table, tr, td {
+    border: 1px solid;
+    text-align: center;
+  }
+</style>
+
+<body>
+  <h1 style="text-align: center">게시판</h1>
+  <h2><%= title %></h2>
+  
+  <table>
+    <td>
+        id
+      </td>
+      <td>
+        user_id
+      </td>
+      <td>
+        user_pwd
+    </td>
+    <% users.forEach(function(item) { %>
+      <tr>
+        <td>
+          <%= item.id %>
+        </td>
+        <td>
+          <%= item.user_id %>
+        </td>
+        <td>
+          <%= item.user_pwd %>
+        </td>
+      </tr>
+    <% }); %>
+  </table>
+</body>
+</html>
