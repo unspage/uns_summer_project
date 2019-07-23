@@ -29,7 +29,7 @@ router.get('/home', (req, res, next) => {//로그인 성공시 홈으로
 //로그인 했을 때
 
 router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
-    let user = req.session.user;
+    //let user = req.session.user;
     
     if(user){
         res.render('board',{title:"board"});
@@ -42,7 +42,7 @@ router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
 
 
 router.get('/write',(req, res,next)=>{//글쓰기로 이동
-    let user = req.session.user;
+    //let user = req.session.user;
     
     if(user){
         res.render('write',{title:"write"});
@@ -103,18 +103,17 @@ router.post('/register', (req, res, next) => {//가입
 
 router.post('/writing', (req, res, next) => {
     
-    let user = req.session.user;
-
     let writeInput = {
         id: req.body.id,
         title: req.body.title,
         content: req.body.content,
         date: req.body.date
     };
+
     console.log(writeInput);
-    
-    user.writing(writeInput, function(result) {
-        
+
+    user.writing(writeInput, function(insertid) {
+        req.body.id = insertid;
         res.redirect('/board');
     });
     

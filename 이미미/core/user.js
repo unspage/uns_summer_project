@@ -75,16 +75,14 @@ User.prototype = {
         for(prop in body){
             bind.push(body[prop]);
         }
-        if(user){
+        
         let sql = 'INSERT INTO board (id, title, content, date) VALUES (?,?,?,?)';
           
         pool.query(sql, bind, function(err, result) {
             if(err) throw err;
             console.log(result.id); 
-
-            callback(result);
+            callback(result.id);
         });
-    }
     
     },
 
