@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
     
 })//맨 처음 시작 화면
 
-router.get('/home', (req, res, next) => {//로그인 성공시 홈으로 
+router.get('/home', (req, res, next) => {
     let user = req.session.user;
 
     if(user) {
@@ -38,7 +38,7 @@ router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
     }
     res.redirect('/board');
 });
-//게시판으로 이동했을 때 
+//게시판목록으로 이동했을 때 
 
 
 router.get('/write',(req, res,next)=>{//글쓰기로 이동
@@ -54,18 +54,25 @@ router.get('/write',(req, res,next)=>{//글쓰기로 이동
 });
 //글 작성화면
 
+router.get('/mypage',(req, res,next)=>{//회원정보 수정
+    if(user){
+        res.render('mypage',{title:"정보수정"});
+ 
+        return;
+    }
+   res.redirect('/home');
+       
+});
+
 
 router.post('/login', (req, res, next) => {//로그인이라는 행동을 함 
     
     user.login(req.body.username, req.body.password, function(result) {
-        if(result) {
-           
+        if(result) {   
             req.session.user = result;
             req.session.opp = 1;
-           
             res.redirect('/home');//로그인 성공시 home으로 이동
         }else {
-           
             res.send('Username/Password incorrect!');//실패시 나오는 화면
         }
     })
@@ -83,15 +90,12 @@ router.post('/register', (req, res, next) => {//가입
     };//입력한 id, pw
   
     user.create(userInput, function(lastId) {//회원가입을 하면
-
         if(lastId) {
- 
             user.find(lastId, function(result) {
                 req.session.user = result;
                 req.session.opp = 0;
                 res.redirect('/home');//찾아서 로그인해서 /home으로 감
             });
-
         }else {
             console.log('Error creating a new user');
         }
@@ -100,9 +104,7 @@ router.post('/register', (req, res, next) => {//가입
 });
 //가입하는 행동
 
-
 router.post('/writing', (req, res, next) => {
-    
     let writeInput = {
         id: req.body.id,
         title: req.body.title,
@@ -111,16 +113,34 @@ router.post('/writing', (req, res, next) => {
     };
 
     console.log(writeInput);
-
     user.writing(writeInput, function(insertid) {
         req.body.id = insertid;
         res.redirect('/board');
     });
     
-});
+});//게시판 글 작성하는 행동
+
+router.post('/mypaging', (req, res, next) => {//회원정보수정:단 id는 변경 불가능
+    
+    let userchaning = {
+        id: req.session.user,
+        username: req.body.username,
+        fullname: req.body.fullname,
+        password: req.body.password
+    };//입력한 id, pw
+  
+    console.log(userchaning);
+
+    user.userupdate(userchaning, function(insertid) {
+        req.body.id = insertid;
+        res.redirect('/home');
+    });
+
+});//회원 정보수업하는 행동
+
+
 
 router.get('/loggout', (req, res, next) => {
-    
     if(req.session.user) {
         req.session.destroy(function() {
             res.redirect('/');
