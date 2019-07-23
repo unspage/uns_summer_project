@@ -15,7 +15,7 @@
     <favorites_list name="JHKo_homepage" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -118,7 +118,7 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="490" />
     <option name="y" value="2" />
     <option name="width" value="975" />
@@ -241,12 +241,13 @@
       <workItem from="1563522531655" duration="73000" />
       <workItem from="1563522732981" duration="615000" />
       <workItem from="1563787111398" duration="9680000" />
-      <workItem from="1563855640897" duration="7413000" />
+      <workItem from="1563855640897" duration="7514000" />
+      <workItem from="1563865117187" duration="149000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="130566000" />
+    <option name="totallyTimeSpent" value="130816000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
