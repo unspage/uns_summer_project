@@ -3,9 +3,7 @@ extends layout
 mixin message(opp, name)
     if(opp)
         h1.greeting welcome board
-            span=name 
-
-
+            span=name     
 
 append links 
     li(style="float: right;")
@@ -16,6 +14,10 @@ block content
         .user 
             +message(opp, name)
 
+    
+
 append links 
     li(style="float: right;")
         a(href="/write") 글쓰기
+
+           
