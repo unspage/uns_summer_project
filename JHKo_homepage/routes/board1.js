@@ -17,6 +17,7 @@ function paging_calc(curPage, totalPostCnt) {
         totalPostCnt = 0
     }
 
+    var totalPostCnt = totalPostCnt;
     var totalPage = Math.ceil(totalPostCnt / page_size);    //전체 페이지의 갯수
     var totalSet = Math.ceil(totalPage / page_list_size);   // 전체 세트 수
     var curSet = Math.ceil(curPage / page_list_size);   // 현재 세트의 번호
@@ -33,6 +34,7 @@ function paging_calc(curPage, totalPostCnt) {
     }
 
     var result2 = {
+        "totalPostCnt": totalPostCnt,
         "curPage": curPage,
         "page_list_size": page_list_size,
         "page_size": page_size,
@@ -65,6 +67,10 @@ router.get('/list', function(req,res,next){
     var totalPostCnt = 0;   //전체 게시물의 숫자
     var result2;
     var curPage = req.param("cur");
+
+    if (curPage == undefined)   {
+        curPage = 1;
+    }
 
     pool.getConnection(function (err, connection) {
         var sql_cnt = "SELECT count(*) as post_cnt FROM post_data";

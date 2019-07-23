@@ -22,6 +22,8 @@ app.use(function(req, res, next)    {
     res.locals.user = req.session.user;
     next();
 })
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 
 app.get('/', function(request, response) {
     response.sendFile(path.join(__dirname + '/views/account/login.html'));

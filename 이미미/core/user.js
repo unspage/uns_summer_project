@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');//password저장목적
 
 function User() {};
 
-
 User.prototype = {
    
     list : function(users=null, callback)
@@ -24,6 +23,8 @@ User.prototype = {
         
 
     },
+
+
     find : function(user = null, callback)
     {
         
@@ -64,6 +65,25 @@ User.prototype = {
         
             callback(result.insertId);
         });
+    },
+
+    
+    writing : function(body, callback)  //글쓰기
+    {
+        var bind = [];
+      
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        
+        let sql = 'INSERT INTO board (id, title, content, date) VALUES (?,?,?,?)';
+          
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+            console.log(result.id); 
+            callback(result.id);
+        });
+    
     },
 
     login : function(username, password, callback)//로그인
