@@ -38,7 +38,11 @@
         <entry file="file://$PROJECT_DIR$/views/board1/read.ejs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="551">
+<<<<<<< HEAD
               <caret line="29" column="8" lean-forward="true" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+=======
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+>>>>>>> JHKo_branch
             </state>
           </provider>
         </entry>
@@ -452,7 +456,11 @@
     <entry file="file://$PROJECT_DIR$/views/board1/read.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="551">
+<<<<<<< HEAD
           <caret line="29" column="8" lean-forward="true" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+=======
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+>>>>>>> JHKo_branch
         </state>
       </provider>
     </entry>
