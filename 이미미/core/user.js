@@ -86,6 +86,23 @@ User.prototype = {
     
     },
 
+    userupdate : function(body, callback)  //회원 정보 수정
+    {
+        var bind = [];
+      
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        
+        let sql = 'UPDATE users SET username=?, fullname=?, password=? where id=?';
+          
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+            console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
     login : function(username, password, callback)//로그인
     {
        

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>자유게시판 </title>
+
+		<link rel="stylesheet" href="../css/normalize.css" />
+		<link rel="stylesheet" href="../css/board.css" />
+</head>
+
+<body>
+	<article class="boardArticle">
+		<h3>자유게시판</h3>
+		<table>
+			<caption class="readHide">자유게시판</caption>
+			<thead>
+				<tr>
+					<th class="no">번호</th>
+					<th class="title">제목</th>
+					<th class="author">작성자</th>
+					<th class="date">작성일</th>
+					<th class="hit">조회</th>
+				</tr>
+
+			</thead>
+			<tbody>
+				<tr>
+					<td class="no">1</td>
+					<td class="title">하이루</td>
+					<td class="author">나작가</td>
+					<td class="date">201313130</td>
+					<td class="hit">55</td>
+					<td input type ="button" value = "글삭제" onclick="location.href='http://localhost:3000/signup'" </td>
+				</tr>
+			</tbody>
+			<input type ="button" value = "글쓰기" onclick="location.href='http://localhost:3000/signup'">
+
+		</table>
+
+	</article>
+
+</body>
+
+</html>
