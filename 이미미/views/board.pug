@@ -6,18 +6,21 @@ mixin message(opp, name)
             span=name     
 
 append links 
+     
     li(style="float: right;")
         a(href="/loggout") Loggout 
     
 block content
-    .dashboard 
-        .user 
-            +message(opp, name)
 
+    .register-panel 
+        include includes/list
     
 
 append links 
     li(style="float: right;")
+        a(href="/mypage") 정보수정
+    li(style="float: right;")
         a(href="/write") 글쓰기
+    
 
            

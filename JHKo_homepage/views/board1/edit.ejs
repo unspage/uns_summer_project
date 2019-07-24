@@ -2,11 +2,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>board</title>
+    <link rel="stylesheet" href="../../css/bootstrap.css">
+    <link rel="stylesheet" href="../../css/bootstrap-grid.css">
+    <link rel="stylesheet" href="../../css/bootstrap-reboot.css">
 </head>
 
 <form name="form1" action='/board1/save_edit' method="post">
-    <table border="1" style="width:600px">
-        <caption>게시판</caption>
+    <table class="table table-bordered">
         <colgroup>
             <col width='15%' />
             <col width='*%' />
@@ -27,7 +29,15 @@
         </tbody>
         <input type="hidden" name="post_num" value="<%=row.post_num%>">
     </table>
+
+    <div class="btn-group float-right" role="group" aria-label="post_btn_group">
+        <button type="button" class="btn btn-dark" onclick="history.back(-1)">취소</button>
+        <button type="button" class="btn btn-dark" onclick="form1.submit()">저장</button>
+    </div>
+
+    <!--
     <a href="#" onclick="form1.submit()">저장</a>
+    -->
 </form>
 </body>
 </html>
