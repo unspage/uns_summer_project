@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <title>BOARD</title>
+  <meta charset="utf-8">
+</head>
+
+<style>
+.writing {
+  width: 700px;
+  border: 1px solid skyblue;
+}
+.col_title {
+  padding: 5px;
+  width: 10%;
+  border-right: 1px solid skyblue;
+}
+.col_writer {
+  padding: 5px;
+  width: 10%;
+  border-right: 1px solid skyblue;
+  border-bottom: 1px solid skyblue;
+}
+.content {
+  vertical-align: top;
+  padding: 10px;
+  height: 200px;
+}
+</style>
+
+<body>
+    <h1 style="text-align: center">글</h1>
+
+    <table class="writing" align="center"> 
+      <tr>
+        <td class="col_title">Title</td>
+        <td style="padding-left: 10px"><%= data.title %></td>
+      </tr>
+      <tr>
+        <td class="col_writer">Writer</td>
+        <td style="padding-left: 10px; border-bottom: 1px solid skyblue"><%= data.writer %></td>
+      </tr>
+      <tr>
+        <td class="content">
+          <%= data.content %>
+        </td>
+      </tr>
+    </table>
+
+    <br>
+    <a href="/board">목록</a>
+</body>
+</html>
