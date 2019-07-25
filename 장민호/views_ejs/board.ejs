@@ -7,9 +7,10 @@
 
 <style>
   .board_list {
-    width: 900px;
+    width: 950px;
     border-left: none;
     border-right: none;
+    margin: 0 auto;
   }
   .board_list ul{
     clear: left;
@@ -18,9 +19,14 @@
     list-style-type: none;
     border-top: 1px solid skyblue;
   }
-  .board_list .table_head {
+  .table_head {
     font-weight: bold ;
     text-align: center;
+    border-top: 2px solid skyblue;
+    border-bottom: 2px solid skyblue;
+  }
+  .table_head li {
+    border-bottom: 2px solid skyblue;
   }
   .board_list ul li {
     text-align: center;
@@ -30,7 +36,7 @@
     padding-top: 10px;
   }
   .idx {
-    width: 50px;
+    width: 100px;
   }
   .title {
     width: 500px;
@@ -58,17 +64,16 @@
       <li class="writer">글쓴이</li>
     </ul>
     <% board.forEach(function(items) { %>
-    <form action="board/content" method="get" id="contentForm"></form>
-      <ul>
-          <li class="idx" name="idx"><%= items.idx %></li>
-          <li class="title" name="title"><a href="/board/content?idx=<%= items.idx%>"><%= items.title %></a></li>
-          <li class="time" name="time"><%= items._time %></li>
-          <li class="writer" name="writer"><%= items.writer %></li>
-      </ul>
-    </form>
+    <ul>
+      <li class="idx" name="idx"><%= items.idx %></li>
+      <li class="title" name="title"><a href="/board/content?idx=<%= items.idx%>"><%= items.title %></a></li>
+      <li class="time" name="time"><%= items._time %></li>
+      <li class="writer" name="writer"><%= items.writer %></li>
+    </ul>
     <% }); %>
+    <ul style="clear: both"></ul>
   </div>
   <br><br><br>
-  <a href="/board/writing/form">글쓰기</a>
+  <a href="/board/edit/form">글쓰기</a>
 </body>
 </html>
