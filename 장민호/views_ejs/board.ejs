@@ -2,73 +2,55 @@
 <html>
 <head>
   <title>BOARD</title>
+  <link rel="stylesheet" type="text/css" href="/css/board_style.css">
   <meta charset="utf-8">
 </head>
 
-<style>
-  .board_list {
-    width: 900px;
-    border-left: none;
-    border-right: none;
-  }
-  .board_list ul{
-    clear: left;
-    margin: 0px;
-    padding: 0px;
-    list-style-type: none;
-    border-top: 1px solid skyblue;
-  }
-  .board_list .table_head {
-    font-weight: bold ;
-    text-align: center;
-  }
-  .board_list ul li {
-    text-align: center;
-    float: left;
-    margin: 0;
-    padding-bottom: 10px;
-    padding-top: 10px;
-  }
-  .idx {
-    width: 50px;
-  }
-  .title {
-    width: 500px;
-  }
-  .time {
-    width: 200px;
-  }
-  .writer {
-    width: 150px;
-  }
-
-</style>
-
 <body>
-  <h1 style="text-align: center">게시판</h1>
-  <b><%= me %></b><br>
-  <a href="/logout">로그아웃</a><br><br>
+  <h1>게시판</h1>
 
-  <h3>목록</h3>
-  <div class="board_list">
-    <ul class="table_head">
-      <li class="idx">번호</li>
-      <li class="title">제목</li>
-      <li class="time">시간</li>
-      <li class="writer">글쓴이</li>
-    </ul>
-    <% board.forEach(function(items) { %>
-    <form action="board/content" method="get" id="contentForm"></form>
-      <ul>
-          <li class="idx" name="idx"><%= items.idx %></li>
-          <li class="title" name="title"><a href="/board/content?idx=<%= items.idx%>"><%= items.title %></a></li>
-          <li class="time" name="time"><%= items._time %></li>
-          <li class="writer" name="writer"><%= items.writer %></li>
-      </ul>
-    </form>
-    <% }); %>
-  </div>
-  <br><br><br>
-  <a href="/board/writing/form">글쓰기</a>
+  <table class="list_frame" align="center">
+    <tr>
+      <td colspan="2" style="text-align: right">
+        <p style="padding: 5px;"><b><%= me %></b>&nbsp;&nbsp;&nbsp;
+        <button onclick="location.href='/logout'">Log out</button></p>
+      </td>
+    </tr>
+    <tr>
+      <td><h3>목록</h3></td>
+      <td>
+        <button onclick="location.href='/board/edit/form'" class="writing">글쓰기</button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="board_list">
+          <ul class="table_head">
+            <li class="idx">번호</li>
+            <li class="title">제목</li>
+            <li class="time">시간</li>
+            <li class="writer">글쓴이</li>
+          </ul>
+          <% if (board.length == 0) { %>
+            <p style="text-align: center; padding: 40px 0 10px 0; ">등록된 글이 없습니다.</p>
+          <% }
+          else { %>
+            <% board.forEach(function(items) { %>
+            <ul>
+              <li class="idx" name="idx"><%= items.idx %></li>
+              <li class="title" name="title">
+                <a href="/board/content?idx=<%= items.idx%>"><%= items.title %></a>
+              </li>
+              <li class="time" name="time"><%= items._time %></li>
+              <li class="writer" name="writer"><%= items.writer %></li>
+            </ul>
+            <% });
+          } %>
+          <ul style="clear: both"></ul>
+        </div>
+      </td>
+    </tr>
+  </table>
+  
 </body>
 </html>

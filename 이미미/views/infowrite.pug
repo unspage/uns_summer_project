@@ -5,18 +5,18 @@ mixin message(opp, name)
         h1.greeting welcome board
             span=name 
 
-
-
 append links 
     li(style="float: right;")
-        a(href="/logout") Logout
+        a(href="/logout") Logout 
     li(style="float: right;")
         a(href="/mypage") 정보수정
-    
 block content
     .dashboard 
         .user 
             +message(opp, name)
-    .write-panel 
-        include includes/writing-form
-
+    .infowrite-panel 
+        img(src="img/infowrite-img.jpg")
+        include includes/infowrite-form
+    .infowrite-panel
+        img(src="img/plusinfowrite-img.jpg")
+        include includes/plusinfowrite-form

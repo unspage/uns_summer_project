@@ -1,0 +1,50 @@
+form(method="post" action="/infowriting")
+    table 
+        tr
+            td 지출내역
+            td 
+                input(type="text" name="expense" )
+        tr 
+            td 지출금액
+            td 
+                input(type="text" name="price")
+        tr 
+            td 카테고리
+            td 
+                input(type="radio" name="category" value="식비", checked)
+                |식비
+                input(type="radio" name="category" value="문화생활비")
+                |문화생활비
+                input(type="radio" name="category" value="건강관리비")
+                |건강관리비
+                input(type="radio" name="category" value="의류미용비")
+                |의류미용비
+                input(type="radio" name="category" value="교통비")
+                |교통비
+                input(type="radio" name="category" value="주거생활비")
+                |주거생활비
+                input(type="radio" name="category" value="학비")
+                |학비
+                input(type="radio" name="category" value="사회생활비")
+                |사회생활비
+                input(type="radio" name="category" value="저축")
+                |저축
+                input(type="radio" name="category" value="여행")
+                |여행
+                input(type="radio" name="category" value="기타")
+                |기타
+        tr 
+            td Date 
+            td 
+                input(type="date" name="date")
+        tr 
+            td 결제
+            td 
+                input(type="radio" name="type" value="카드", checked)
+                |카드
+                input(type="radio" name="type" value="현금")
+                |현금
+        tr 
+            td
+            td
+                input(type="submit" value="작성")

@@ -1,0 +1,34 @@
+form(method="post" action="/plusinfowriting")
+    table 
+        tr
+            td 수입내역
+            td 
+                input(type="text" name="p_expense" )
+        tr 
+            td 수입금액
+            td 
+                input(type="text" name="p_price")
+        tr 
+            td 카테고리
+            td 
+                input(type="radio" name="category" value="근로소득", checked)
+                |근로소득
+                input(type="radio" name="category" value="금융소득")
+                |금융소득
+                input(type="radio" name="category" value="기타")
+                |기타
+        tr 
+            td Date 
+            td 
+                input(type="date" name="date")
+        tr 
+            td 결제
+            td 
+                input(type="radio" name="type" value="카드", checked)
+                |카드
+                input(type="radio" name="type" value="현금")
+                |현금
+        tr 
+            td
+            td
+                input(type="submit" value="작성")

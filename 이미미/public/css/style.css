@@ -47,7 +47,7 @@ nav ul li a:hover
     overflow: hidden;
 }
 
-.login-panel, .register-panel
+.login-panel, .register-panel, .write-panel, .infowrite-panel, .mypage-panel
 {
     padding: 20px 20px 50px 20px;
     border: 1px solid #ccc;
