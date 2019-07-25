@@ -38,10 +38,19 @@ router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
     }
     res.redirect('/board');
 });
-//게시판목록으로 이동했을 때 
 
+router.get('/info',(req, res,next)=>{//가계부로 이동
+    //let user = req.session.user;
+    
+    if(user){
+        res.render('info',{title:"가계부"});
+        return;
 
-router.get('/write',(req, res,next)=>{//글쓰기로 이동
+    }
+    res.redirect('/info');
+});
+
+router.get('/write',(req, res,next)=>{//게시판 글쓰기로 이동
     //let user = req.session.user;
     
     if(user){
@@ -53,8 +62,19 @@ router.get('/write',(req, res,next)=>{//글쓰기로 이동
        
 });
 //글 작성화면
+router.get('/infowrite',(req, res,next)=>{//가계부 작성으로이동
+    //let user = req.session.user;
+    
+    if(user){
+        res.render('infowrite',{title:"가계부작성"});
+ 
+        return;
+    }
+   res.redirect('/info');
+       
+});
 
-router.get('/mypage',(req, res,next)=>{//회원정보 수정
+router.get('/mypage',(req, res,next)=>{//회원정보수정
     if(user){
         res.render('mypage',{title:"정보수정"});
  
@@ -81,20 +101,20 @@ router.post('/login', (req, res, next) => {//로그인이라는 행동을 함
 //로그인이라는 행동
 
 
-router.post('/register', (req, res, next) => {//가입
+router.post('/register', (req, res, next) => {//회원가입
     
     let userInput = {
         username: req.body.username,
         fullname: req.body.fullname,
         password: req.body.password
     };//입력한 id, pw
-  
-    user.create(userInput, function(lastId) {//회원가입을 하면
+    console.log(userInput);
+    user.create(userInput, function(lastId) {
         if(lastId) {
             user.find(lastId, function(result) {
                 req.session.user = result;
                 req.session.opp = 0;
-                res.redirect('/home');//찾아서 로그인해서 /home으로 감
+                res.redirect('/home');
             });
         }else {
             console.log('Error creating a new user');
@@ -106,7 +126,7 @@ router.post('/register', (req, res, next) => {//가입
 
 router.post('/writing', (req, res, next) => {
     let writeInput = {
-        id: req.body.id,
+        id: req.session.user.id,
         title: req.body.title,
         content: req.body.content,
         date: req.body.date
@@ -120,13 +140,13 @@ router.post('/writing', (req, res, next) => {
     
 });//게시판 글 작성하는 행동
 
-router.post('/mypaging', (req, res, next) => {//회원정보수정:단 id는 변경 불가능
+router.post('/mypaging', (req, res, next) => {//회원정보수정
     
     let userchaning = {
-        id: req.session.user,
         username: req.body.username,
         fullname: req.body.fullname,
-        password: req.body.password
+        password: req.body.password,
+        id:req.session.user.id
     };//입력한 id, pw
   
     console.log(userchaning);
@@ -138,15 +158,51 @@ router.post('/mypaging', (req, res, next) => {//회원정보수정:단 id는 변
 
 });//회원 정보수업하는 행동
 
+router.post('/infowriting', (req, res, next) => {//가계부작성
+    
+    let infowriting = {
+        id:req.session.user.id,
+        expense: req.body.expense,
+        price: req.body.price,
+        category: req.body.category,
+        date: req.body.date,
+        type: req.body.date
+        
+    };//입력한 내용
+  
+    console.log(infowriting);
 
+    user.infowriting(infowriting, function(insertid) {
+        req.body.id = insertid;
+        res.redirect('/info');
+    });
 
-router.get('/loggout', (req, res, next) => {
+});//회원 정보수업하는 행동
+
+router.post('/withdrawal', (req, res, next) => {//회원탈퇴
+    
+    let withdrawal = {
+        id:req.session.user.id
+    };//입력한 id, pw
+  
+    console.log(withdrawal);
+
+    user.withdrawal(withdrawal, function(insertid) {
+        req.body.id = insertid;
+        req.session.destroy(function() {
+            res.redirect('/');
+        });
+    });
+
+});
+
+router.get('/logout', (req, res, next) => {//logout
     if(req.session.user) {
         req.session.destroy(function() {
             res.redirect('/');
         });
     }
 });
-//loggout했을 때
+
 
 module.exports = router;

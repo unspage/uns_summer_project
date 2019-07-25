@@ -9,7 +9,9 @@ mixin message(opp, name)
 
 append links 
     li(style="float: right;")
-        a(href="/loggout") Loggout 
+        a(href="/logout") Logout
+    li(style="float: right;")
+        a(href="/mypage") 정보수정
     
 block content
     .dashboard 
@@ -17,3 +19,4 @@ block content
             +message(opp, name)
     .register-panel 
         include includes/writing-form
+

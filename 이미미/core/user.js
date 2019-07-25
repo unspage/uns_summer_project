@@ -70,6 +70,7 @@ User.prototype = {
     
     writing : function(body, callback)  //글쓰기
     {
+
         var bind = [];
       
         for(prop in body){
@@ -86,15 +87,16 @@ User.prototype = {
     
     },
 
-    userupdate : function(body, callback)  //회원 정보 수정
+    infowriting : function(body, callback)  //가계부기록
     {
+
         var bind = [];
       
         for(prop in body){
             bind.push(body[prop]);
         }
         
-        let sql = 'UPDATE users SET username=?, fullname=?, password=? where id=?';
+        let sql = 'INSERT INTO info (id, expense, price, category, date, type) VALUES (?,?,?,?,?,?)';
           
         pool.query(sql, bind, function(err, result) {
             if(err) throw err;
@@ -103,6 +105,56 @@ User.prototype = {
         });
     
     },
+
+    userupdate : function(body, callback)  //회원 정보 수정
+    {
+        
+        var inputusername=body.username;
+        body.username=inputusername
+        var inputfullname=body.fullname;
+        body.fullname=inputfullname;
+        var pwd = body.password;
+        body.password = bcrypt.hashSync(pwd,10);
+        var inputid=body.id;
+        body.id=inputid;
+        var bind = [];
+      
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        console.log(bind);
+    
+        let sql = "UPDATE users SET username='"+body.username+"', fullname='"+body.fullname+"',password='"+body.password+"' where id='"+body.id+"'";  
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+            console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+
+    withdrawal : function(body, callback)  //회원탈퇴
+    {
+        
+
+        var inputid=body.id;
+        body.id=inputid;
+        var bind = [];
+      
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        console.log(bind);
+    
+        let sql = "delete from users where id=?";  
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+            console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+
     login : function(username, password, callback)//로그인
     {
        
