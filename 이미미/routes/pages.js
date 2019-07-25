@@ -158,7 +158,7 @@ router.post('/mypaging', (req, res, next) => {//회원정보수정
 
 });//회원 정보수업하는 행동
 
-router.post('/infowriting', (req, res, next) => {//가계부작성
+router.post('/infowriting', (req, res, next) => {//가계부지출내역작성
     
     let infowriting = {
         id:req.session.user.id,
@@ -166,7 +166,7 @@ router.post('/infowriting', (req, res, next) => {//가계부작성
         price: req.body.price,
         category: req.body.category,
         date: req.body.date,
-        type: req.body.date
+        type: req.body.type
         
     };//입력한 내용
   
@@ -177,7 +177,28 @@ router.post('/infowriting', (req, res, next) => {//가계부작성
         res.redirect('/info');
     });
 
-});//회원 정보수업하는 행동
+});
+
+router.post('/plusinfowriting', (req, res, next) => {//가계부수입내역작성
+    
+    let plusinfowriting = {
+        id:req.session.user.id,
+        p_expense: req.body.p_expense,
+        p_price: req.body.p_price,
+        category: req.body.category,
+        date: req.body.date,
+        type: req.body.type
+        
+    };//입력한 내용
+  
+    console.log(plusinfowriting);
+
+    user.plusinfowriting(plusinfowriting, function(insertid) {
+        req.body.id = insertid;
+        res.redirect('/info');
+    });
+
+});
 
 router.post('/withdrawal', (req, res, next) => {//회원탈퇴
     

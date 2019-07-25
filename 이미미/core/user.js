@@ -87,7 +87,7 @@ User.prototype = {
     
     },
 
-    infowriting : function(body, callback)  //가계부기록
+    infowriting : function(body, callback)  //가계부지출내역기록
     {
 
         var bind = [];
@@ -97,6 +97,25 @@ User.prototype = {
         }
         
         let sql = 'INSERT INTO info (id, expense, price, category, date, type) VALUES (?,?,?,?,?,?)';
+          
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+            console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+
+    plusinfowriting : function(body, callback)  //가계부지출내역기록
+    {
+
+        var bind = [];
+      
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        
+        let sql = 'INSERT INTO plusinfo (id, p_expense, p_price, category, date, type) VALUES (?,?,?,?,?,?)';
           
         pool.query(sql, bind, function(err, result) {
             if(err) throw err;
