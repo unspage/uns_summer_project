@@ -4,6 +4,9 @@ var qs = require('querystring');
 var mysql = require('mysql');
 var session = require('express-session');
 
+// 파일 참조 설정.
+app.use(express.static(__dirname + '/public'));
+
 // 세션 설정.
 app.use(session({
     secret: '@@keykey',
@@ -172,6 +175,7 @@ app.get('/board', function(req, res) {
 
             conn.query(sql, function(err, results) {
                 if (!err) {
+                    console.log("게시판 출력 results", results);
                     res.render('board', {me: req.session.user.id, board: results});
                 }
                 else {
@@ -349,7 +353,7 @@ app.get('/board/content/update', function(req, res) {
         conn.query(sql, function(err, result) {
             if (!err) {
                 console.log('게시글 수정: ', result);
-                res.redirect('/board/content?idx=' + get.idx);
+                res.status(302).send("<script>alert('글이 수정되었습니다.'); window.location.href='http://localhost:3000/board/content?idx=" + get.idx + "'</script>");
             }
             else {
                 console.error('SQL delete Error: ' + err);

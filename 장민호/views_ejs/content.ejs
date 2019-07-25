@@ -2,56 +2,36 @@
 <html>
 <head>
   <title>BOARD</title>
+  <link rel="stylesheet" type="text/css" href="/css/writing_style.css">
   <meta charset="utf-8">
 </head>
 
-<style>
-.edit {
-  width: 700px;
-  border: 2px solid skyblue;
-}
-.col_title {
-  padding: 10px 5px 5px 5px;
-  width: 100px;
-  border-right: 2px solid skyblue;
-}
-.col_writer {
-  padding: 5px 5px 10px 5px;
-  width: 100px;
-  border-right: 2px solid skyblue;
-  border-bottom: 2px solid skyblue;
-}
-.content {
-  text-align: center;
-  padding: 15px;
-  height: 200px;
-}
-</style>
-
 <body>
-    <h1 style="text-align: center">글</h1>
+    <h1>글</h1>
 
     <table class="edit" align="center"> 
       <tr>
-        <td class="col_title">Title</td>
-        <td style="padding-left: 10px"><%= data.title %></td>
+        <td class="col_title">제목</td>
+        <td style="padding-left: 10px; border: 7px solid white"><%= data.title %></td>
       </tr>
       <tr>
-        <td class="col_writer">Writer</td>
-        <td style="padding-left: 10px; border-bottom: 2px solid skyblue"><%= data.writer %></td>
+        <td class="col_writer">글쓴이</td>
+        <td style="padding-left: 10px; border: 7px solid white"><%= data.writer %></td>
       </tr>
       <tr>
         <td class="content" colspan="2"> 
-          <textarea cols="80" rows="15" style="padding: 15px"><%= data.content; %></textarea>
+          <textarea readonly="readonly" cols="100" rows="12" style="padding: 10px"><%= data.content; %></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: right; padding-right: 20px; padding-bottom: 10px;">
+          <% if (me === data.writer) { %>
+            <button onclick="location.href='/board/content/update/form?idx=<%= data.idx %>'">수정</button>
+            <button onclick="location.href='/board/content/delete?idx=<%= data.idx %>'">삭제</button>
+          <% }; %>  
+          <button onclick="location.href='/board'">목록</button>
         </td>
       </tr>
     </table>
-
-    <br>
-    <a href="/board">목록</a>
-    <% if (me === data.writer) { %>
-      <a href="/board/content/update/form?idx=<%= data.idx %>">수정</a>
-      <a href="/board/content/delete?idx=<%= data.idx %>">삭제</a>
-    <% }; %>
 </body>
 </html>
