@@ -9,12 +9,15 @@ mixin message(opp, name)
 
 append links 
     li(style="float: right;")
-        a(href="/loggout") Loggout 
+        a(href="/logout") Logout 
     
 block content
     .dashboard 
         .user 
             +message(opp, name)
-    .register-panel 
+    .mypage-panel
         include includes/mypage-form
+    .mypage-panel 
+        include includes/withdrawal-form
+
 

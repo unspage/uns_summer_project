@@ -6,18 +6,56 @@
 </head>
 
 <style>
-
+  h1 {
+    text-align: center;
+    padding: 20px;
+  }
+  .loginForm {
+    background-color: rgb(194, 233, 202);
+    padding: 10px
+  }
+  .col {
+    height: 50px;
+    padding: 0 10px 0 10px;
+  }
+  .etc {
+    height: 50px;
+    text-align: center;
+  }
+  .button {
+    margin: 0 10px 0 10px;
+  }
+  .input_text {
+    height: 20px;
+    padding-right: 10px;
+  }
 </style>
 
+<!-- header? -->
+
 <body>
-    <h1 style="text-align: center">로그인</h1>
+  <h1>로그인</h1>
 
-    <form action="/login" method="post">
-        ID  <input type="text" name="id"><br><br>
-        Password  <input type="password" name="pwd" maxlength="20"> <br><br>
-        <input type="submit" value="Login">
-    </form><br>
+  <form action="/login" method="post">
+    <table class="loginForm" align="center">
+      <tr>
+        <td class="col">ID</td>
+        <td><input type="text" name="id" class="input_text"></td>
+      </tr>
+      <tr>
+        <td class="col">PW</td>
+        <td><input type="password" name="pwd" maxlength="20" class="input_text"></td>
+      </tr>
+      <tr>
+        <td class="etc" colspan=2>
+          <input type="submit" value="Log in" class="button">
+          <input type="button" onclick="location.href='register/form'" value="Sign up" class="button">
+        </td>
+      </tr>
+    </table>
+  </form>
 
-    <a href="register/form">회원가입</a>
 </body>
+
+<!-- footer? -->
 </html>

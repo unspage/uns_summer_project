@@ -4,6 +4,9 @@ var qs = require('querystring');
 var mysql = require('mysql');
 var session = require('express-session');
 
+// 파일 참조 설정.
+app.use(express.static(__dirname + '/public'));
+
 // 세션 설정.
 app.use(session({
     secret: '@@keykey',
@@ -172,6 +175,7 @@ app.get('/board', function(req, res) {
 
             conn.query(sql, function(err, results) {
                 if (!err) {
+                    console.log("게시판 출력 results", results);
                     res.render('board', {me: req.session.user.id, board: results});
                 }
                 else {
@@ -189,20 +193,26 @@ app.get('/board', function(req, res) {
 });
 
 // 글쓰기 요청
-app.get('/board/writing/form', function(req, res) {
-    console.log('==== board/writing/form');
+app.get('/board/edit/form', function(req, res) {
+    console.log('==== board/edit/form');
 
-    res.render('writing', {me: req.session.user.id});
+    if (! req.session.user) {
+        console.log('로그인 되어 있지 않음.');
+        res.redirect('/');
+    }
+    else { 
+        res.render('edit', {me: req.session.user.id});
+    }
 });
 
 // 글쓰기 완료. DB에 삽입
-app.get('/board/writing', function(req, res) {
-    console.log('==== board/writing');
+app.get('/board/edit', function(req, res) {
+    console.log('==== board/edit');
 
     var get = req.query;
     console.log('입력된 글 정보:', get);
 
-    // DB user 비교
+    // DB에 게시글 삽입.
     pool.getConnection(function(err, conn) {
         if (err) {
             console.error('Connect DB Error: ' + err);
@@ -227,7 +237,7 @@ app.get('/board/writing', function(req, res) {
     });
 });
 
-// 글 내용 보기.
+// 게시글 내용 보기.
 app.get('/board/content', function(req, res) {
     console.log('==== board/content');
 
@@ -248,10 +258,105 @@ app.get('/board/content', function(req, res) {
         conn.query(sql, function(err, result) {
             if (!err) {
                 console.log('게시글 조회: ', result);
-                res.render('content', {data: result[0]});
+                res.render('content', {me: req.session.user.id, data: result[0]});
             }
             else {
                 console.error('SQL Insert Error: ' + err);
+            }
+        });
+        conn.release();
+    });
+});
+
+// 게시글 삭제
+app.get('/board/content/delete', function(req, res) {
+    console.log('==== board/content/delete');
+
+    var get = req.query;
+    console.log('삭제하는 글 정보:', get);
+
+    // DB 게시글 삭제
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error('Connect DB Error: ' + err);
+            res.end('Connect DB Error: ', err)
+        }
+        console.log('connect to mydb');
+        
+        var sql = "delete from board where idx=" + get.idx + ";"; 
+        console.log('게시글을 삭제하는 SQL: ' + sql);
+
+        conn.query(sql, function(err, result) {
+            if (!err) {
+                console.log('게시글 삭제: ', result);
+                res.redirect('/board');
+            }
+            else {
+                console.error('SQL delete Error: ' + err);
+            }
+        });
+        conn.release();
+    });
+});
+
+// 게시글 수정 요청
+app.get('/board/content/update/form', function(req, res) {
+    console.log('==== board/content/update/form');
+    
+    var get = req.query;
+    console.log('수정하는 글 정보:', get);
+
+    // DB에서 수정할 게시글 불러오기
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error('Connect DB Error: ' + err);
+            res.end('Connect DB Error: ', err)
+        }
+        console.log('connect to mydb');
+        
+        var sql = "select * from board where idx=" + get.idx + ";"; 
+        console.log('수정할 게시글을 조회하는 SQL: ' + sql);
+
+        conn.query(sql, function(err, result) {
+            if (!err) {
+                console.log('SQL 조회 결과: ', result);
+                res.render('update', {me: req.session.user.id, data: result[0]});
+            }
+            else {
+                console.error('SQL select Error: ' + err);
+            }
+        });
+        conn.release();
+    });
+    
+});
+
+// 게시글 수정 완료
+app.get('/board/content/update', function(req, res) {
+    console.log('==== board/content/update');
+
+    var get = req.query;
+    console.log('수정하는 글 정보:', get);
+
+    // DB 게시글 수정
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error('Connect DB Error: ' + err);
+            res.end('Connect DB Error: ', err)
+        }
+        console.log('connect to mydb');
+        
+        var sql = "update board set title='" + get.title + "', _time=now(), writer='" + 
+            get.id + "', content='" + get.content + "' where idx=" + get.idx + ";"; 
+        console.log('게시글을 수정하는 SQL: ' + sql);
+
+        conn.query(sql, function(err, result) {
+            if (!err) {
+                console.log('게시글 수정: ', result);
+                res.status(302).send("<script>alert('글이 수정되었습니다.'); window.location.href='http://localhost:3000/board/content?idx=" + get.idx + "'</script>");
+            }
+            else {
+                console.error('SQL delete Error: ' + err);
             }
         });
         conn.release();

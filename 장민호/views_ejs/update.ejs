@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <title>BOARD</title>
+  <link rel="stylesheet" type="text/css" href="/css/writing_style.css">
+  <meta charset="utf-8">
+</head>
+
+<style>
+    .content {
+        text-align: left;
+        padding: 10px
+    }
+</style>
+
+<body>
+    <h1 style="text-align: center">글 수정</h1>
+
+    <form action="/board/content/update" method="get">
+        <table class="edit" align="center"> 
+            <tr>
+                <td class="col_title">제목</td>
+                <td style="padding-left: 10px; border: 7px solid white"><input type="text" name="title" value='<%= data.title %>'></td>
+            </tr>
+            <tr>
+                <td class="col_writer">글쓴이</td>
+                <td style="padding-left: 10px; border: 7px solid white"><input type="text" name="id" value="<%= me %>" readonly="readonly" /></td>
+            </tr>
+            <tr>
+                <td class="content" colspan="2"> 
+                    <textarea name="content" class="content" cols="100" rows="12"><%= data.content; %></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right; padding-right: 20px; padding-bottom: 10px;"> 
+                    <button type="button" onclick="location.href='/board/content?idx=<%= data.idx %>'">취소</button>
+                    <input type="hidden" name=idx value="<%= data.idx %>">
+                    <input type="submit" value="저장">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

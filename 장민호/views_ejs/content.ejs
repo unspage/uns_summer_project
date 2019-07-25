@@ -2,52 +2,36 @@
 <html>
 <head>
   <title>BOARD</title>
+  <link rel="stylesheet" type="text/css" href="/css/writing_style.css">
   <meta charset="utf-8">
 </head>
 
-<style>
-.writing {
-  width: 700px;
-  border: 1px solid skyblue;
-}
-.col_title {
-  padding: 5px;
-  width: 10%;
-  border-right: 1px solid skyblue;
-}
-.col_writer {
-  padding: 5px;
-  width: 10%;
-  border-right: 1px solid skyblue;
-  border-bottom: 1px solid skyblue;
-}
-.content {
-  vertical-align: top;
-  padding: 10px;
-  height: 200px;
-}
-</style>
-
 <body>
-    <h1 style="text-align: center">글</h1>
+    <h1>글</h1>
 
-    <table class="writing" align="center"> 
+    <table class="edit" align="center"> 
       <tr>
-        <td class="col_title">Title</td>
-        <td style="padding-left: 10px"><%= data.title %></td>
+        <td class="col_title">제목</td>
+        <td style="padding-left: 10px; border: 7px solid white"><%= data.title %></td>
       </tr>
       <tr>
-        <td class="col_writer">Writer</td>
-        <td style="padding-left: 10px; border-bottom: 1px solid skyblue"><%= data.writer %></td>
+        <td class="col_writer">글쓴이</td>
+        <td style="padding-left: 10px; border: 7px solid white"><%= data.writer %></td>
       </tr>
       <tr>
-        <td class="content">
-          <%= data.content %>
+        <td class="content" colspan="2"> 
+          <textarea readonly="readonly" cols="100" rows="12" style="padding: 10px"><%= data.content; %></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: right; padding-right: 20px; padding-bottom: 10px;">
+          <% if (me === data.writer) { %>
+            <button onclick="location.href='/board/content/update/form?idx=<%= data.idx %>'">수정</button>
+            <button onclick="location.href='/board/content/delete?idx=<%= data.idx %>'">삭제</button>
+          <% }; %>  
+          <button onclick="location.href='/board'">목록</button>
         </td>
       </tr>
     </table>
-
-    <br>
-    <a href="/board">목록</a>
 </body>
 </html>
