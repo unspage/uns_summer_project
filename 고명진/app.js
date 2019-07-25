@@ -1,8 +1,12 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
+var express = require('express');
 var qs = require('querystring');
+var date = require('date-utils');
 
+var exp = express();
+var newDate = new Date();
 var mysql = require('mysql');
 var connection = mysql.createConnection({
   host : 'localhost',
@@ -19,12 +23,23 @@ var app = http.createServer(function(request,response){
     var id = queryData.id;
     var pw = queryData.pw;
 
+    connection.query(`select * from board order by idx`, function(err,result) {
+      if (err) { 
+        console.log('mysql Error');
+      }
+      else {
+        console.log('no Error');
+      }
+    })
+
     if(pathname === '/'){
       fs.readFile(`data/login.html`, 'utf8', function(err, description){
         response.writeHead(200);
         response.end(description);
         console.log('root')
       });
+
+
     }
     else if (pathname === '/login_action') {
 
@@ -80,7 +95,7 @@ var app = http.createServer(function(request,response){
         response.end(description);
       });
     }
-      else if (pathname === '/signupAction') {
+    else if (pathname === '/signupAction') {
         var body = '';
         var username = '';
         var userPW = '';
@@ -110,8 +125,50 @@ var app = http.createServer(function(request,response){
         }
         })
       })
-  }
-    
+    }
+    else if (pathname == '/write') {
+    fs.readFile(`data/write.html`, 'utf8', function(err, description){
+      response.writeHead(200);
+      response.end(description);
+    });
+    }
+    else if (pathname == '/write_action') {
+        var body = '';
+        var title = '';
+        var content = '';
+        var writer = '';
+        var time = newDate.toFormat('YYYY-MM-DD');
+        request.on('data',function(data) {
+          body = body + data;
+        });
+        request.on('end',function() {
+        var post = qs.parse(body);
+
+        title = post.title;
+        writer = post.writer;
+        content = post.content;  
+
+        connection.query(`INSERT INTO board (title,writer,content,hit,regdate,moddate) 
+        VALUES ('${title}','${writer}','${content}',1,'${time}','${time}')`, function(err, rows, username,userPW) {
+        if (err) {
+          console.log('Error while performing Query.', err);
+          fs.readFile(`data/signup.html`, 'utf8', function(err, description){
+            response.writeHead(200);
+            response.end(description);
+          })
+        }
+        else {
+          console.log('Write is success');
+          fs.readFile(`data/boardlist.html`, 'utf8', function(err, description){
+            response.writeHead(200);
+            response.end(description);
+        
+          })
+        }
+        })
+      })
+    }
+
     else {
       response.writeHead(404);
       response.end('Not found');
