@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <title>BOARD</title>
+  <meta charset="utf-8">
+</head>
+
+<style>
+    h1 {
+        text-align: center;
+        padding: 20px;
+    }
+    .registerForm {
+        padding: 10px;
+        background-color: rgb(194, 233, 202);
+    }
+    .phone {
+        width: 50px;
+        height: 20px;
+    }
+    .col {
+        width: 80px;
+        padding: 10px;
+    }
+    .input_text {
+        width: 185px;
+        height: 20px;
+        padding-right: 10px;
+    }
+</style>
+
+<script>
+    function check() {
+        if (register.id.value == "") {
+            alert("아이디를 입력해 주세요.");
+            return false;
+        }
+        else if (register.pwd.value == "") {
+            alert("비밀번호를 입력해 주세요.");
+            return false;
+        }
+        else if (register.name.value == "") {
+            alert("이름을 입력해 주세요.");
+            return false;
+        }
+        else if (register.phone0.value == "" || register.phone1.value == "" || register.phone2.value == "") {
+            alert("전화번호를 입력해 주세요.");
+            return false;
+        }
+        else return true;
+    }
+</script>
+
+<body>
+    <h1>회원가입</h1>
+
+    <form action="/register" name="register" method="post" onsubmit="return check()">
+        <table class="registerForm" align="center">
+            <tr>
+                <td class="col">ID</td>
+                <td><input type="text" name="id" maxlength="20" class="input_text"></td>
+                 <!-- TODO 아이디 중복 확인 -->
+            </tr>
+            <tr>
+                <td class="col">PW</td>
+                <td><input type="password" name="pwd" maxlength="20" class="input_text"></td>
+                <!-- TODO 회원가입 시 비밀번호 두 번 입력으로 확인 필요-->
+            </tr>
+            <tr>
+                <td class="col">Name</td>
+                <td><input type="text" name="name" class="input_text"></td>
+            </tr>
+            <tr>
+                <td class="col">Phone</td>
+                <td><input type="text" class="phone" name="phone0" maxlength="3"> - <input type="text" class="phone" name="phone1" maxlength="4"> - <input type="text" class="phone" name="phone2" maxlength="4"></td>
+            </tr>
+            <tr style="text-align: center; height: 50px;">
+                <td colspan="2"><input type="submit" value="Sign up"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
