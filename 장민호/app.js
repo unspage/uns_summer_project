@@ -17,9 +17,12 @@ app.use(session({
 // DB
 var dbConfig = {
     host: 'localhost',
-    user:'root',
-    password:'database',
-    database:'mydb',
+    port: 3306,
+    user: 'root',
+    password: 'database',
+    database: 'mydb',
+    connectionLimit : 10,
+    multipleStatements : true,
     // date 문자열에서 'GMT 09:00'같은 문자열을 뺀 깨끗한 시간
     dateStrings: 'date'
 };
@@ -44,8 +47,12 @@ app.get('/', function(req, res){
     }
 });
 
+app.get('/login', function(req, res) {
+    res.redirect('/');
+})
+
 // 로그인. post 방식
-app.post('/login', function(req,res) {
+app.post('/login', function(req, res) {
     console.log('==== login');
 
     var buf = '';
@@ -59,36 +66,42 @@ app.post('/login', function(req,res) {
         
         // DB user 비교
         pool.getConnection(function(err, conn) {
-            console.log('connect to mydb');
+            if (err) {
+                console.error("Connect DB Error:", err);
+                res.status(400).send('Could not get a connection');
+            }
+            else {
+                console.log('connect to mydb');
 
-            var sql = "select * from users where user_id='" + post.id + 
-                "' and " + "user_pwd='" + post.pwd + "';";
-            console.log('로그인 정보 조회 SQL: ' + sql);
+                var sql = "select * from users where user_id='" + post.id + 
+                    "' and " + "user_pwd='" + post.pwd + "';";
+                console.log('로그인 정보 조회 SQL: ' + sql);
 
-            conn.query(sql, function(err, results) {
-                if (err) {
-                    console.error('SQL Run Error: ', err);
-                }
-                console.log('로그인 정보 조회 결과:', results);
+                conn.query(sql, function(err, results) {
+                    if (err) {
+                        console.error('SQL select Error: ', err);
+                    }
+                    console.log('로그인 정보 조회 결과:', results);
 
-                // 로그인 실패
-                if (results.length === 0) {
-                    console.log('로그인 실패: ' + post.id);
-                    res.status(302).send("<script>alert('로그인 실패. 다시 입력해주세요.'); window.location.href='http://localhost:3000/';</script>");
-                }
-                // 로그인 성공
-                else {
-                    req.session.user = {
-                        id: post.id,
-                        pw: post.pwd,
-                        name: 'User Name',
-                        authorized: true
-                    };
-                    console.log('로그인 성공: ' + req.session.user.id);
-                    res.redirect('/board');
-                }
-                conn.release();
-            });
+                    // 로그인 실패
+                    if (results.length === 0) {
+                        console.log('로그인 실패: ' + post.id);
+                        res.status(302).send("<script>alert('로그인 실패. 다시 입력해주세요.'); window.location.href='http://localhost:3000/';</script>");
+                    }
+                    // 로그인 성공
+                    else {
+                        req.session.user = {
+                            id: post.id,
+                            pw: post.pwd,
+                            name: 'User Name',
+                            authorized: true
+                        };
+                        console.log('로그인 성공: ' + req.session.user.id);
+                        res.redirect('/board');
+                    }
+                    conn.release();
+                });
+            }   
         });
     });
 });
