@@ -17,6 +17,7 @@ create table post (
     title varchar(30) not null,
     content varchar(200) not null,
     upTime datetime not null
+    img_data mediumblob /*16MB*/
     );
 
 insert into users(user_id, user_pwd, user_name, phone)

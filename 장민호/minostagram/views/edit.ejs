@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <title>Minostagram</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <b><%= me %></b>
+    <form action='/edit/post_up' method='POST' enctype='multipart/form-data'>
+        <input TYPE=hidden name=mode value=insert>
+        <table>
+            <tr>
+                <!-- TODO 이미지 파일만 선택 가능하도록 해야함 -->
+                <td>올릴 이미지:</td>
+                <td><input type='file' name='img'></td></tr>
+            <tr>
+                <td>내용</td>
+                <td>
+                    <textarea name="content" class="content" cols="100" rows="12" placeholder="최대 글자 수는 100자 입니다."></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan = 2>
+                    <input type='submit' value='submit'>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
