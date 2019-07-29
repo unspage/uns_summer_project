@@ -3,30 +3,91 @@
 <head>
     <title>Minostagram</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" >
+    
+    <!-- Custom styles for this template -->
+    <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
 </head>
 
+<style>
+.filebox label { 
+    display: inline-block; 
+    padding: .5em .75em; color: #999; 
+    font-size: inherit; 
+    line-height: normal; 
+    vertical-align: middle; 
+    background-color: #fdfdfd; 
+    cursor: pointer; border: 1px solid #ebebeb; 
+    border-bottom-color: #e2e2e2; border-radius: .25em; 
+} 
+
+.filebox input[type="file"] { /* 파일 필드 숨기기 */ 
+    position: absolute; width: 1px; 
+    height: 1px; padding: 0; 
+    margin: -1px; 
+    overflow: hidden; 
+    clip:rect(0,0,0,0); 
+    border: 0; 
+}
+
+.filebox.bs3-primary label {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+</style>
+
 <body>
-    <b><%= me %></b>
-    <form action='/edit/post_up' method='POST' enctype='multipart/form-data'>
-        <input TYPE=hidden name=mode value=insert>
-        <table>
-            <tr>
-                <!-- TODO 이미지 파일만 선택 가능하도록 해야함 -->
-                <td>올릴 이미지:</td>
-                <td><input type='file' name='img'></td></tr>
-            <tr>
-                <td>내용</td>
-                <td>
-                    <textarea name="content" class="content" cols="100" rows="12" placeholder="최대 글자 수는 100자 입니다."></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td colspan = 2>
-                    <input type='submit' value='submit'>
-                </td>
-            </tr>
-        </table>
-    </form>
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <!-- Post Content Column -->
+            <div class="col-lg-8">
+                <!-- Title -->
+                <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+                    <a class="title" href="/">Minostagram</a>
+                </h1>
+        
+                <hr>
+                
+                <form action='/edit/post_up' method='POST' enctype='multipart/form-data'>
+                    <!-- Preview Image -->
+                    <div class="filebox bs3-primary">
+                        <label for="ex_file">사진 선택</label>
+                        <input type="file" id="ex_file" name="img"> 
+                    </div>
+                    <img class="img-fluid rounded" id="image_section" src="http://placehold.it/900x300" alt="your image">
+            
+                    <hr>
+        
+                    <!-- Post Content -->
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" name="content"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+    
+    </div>
+    <!-- /.container -->
 </body>
+
+<script>
+document.getElementById("ex_file").onchange = function () {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        // get loaded data and render thumbnail.
+        document.getElementById("image_section").src = e.target.result;
+    };
+
+    // read the image file as a data URL.
+    reader.readAsDataURL(this.files[0]);
+};
+</script>
 </html>

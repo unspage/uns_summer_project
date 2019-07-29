@@ -37,12 +37,11 @@ var dbConfig = {
 // DB 연결 풀
 var pool = mysql.createPool(dbConfig);
 
-
 // 이미지 파일 관리를 위한 모듈
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, 'uploads');
+        callback(null, 'public/uploads');
     },
     filename: function(req, file, callback){
         callback(null, Date.now() + "-" + file.originalname);
@@ -50,21 +49,44 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
+
 // 첫 화면.
 app.get('/', function(req, res) {
     console.log('==== index');
     
-    if (req.session.user) {
-        console.log('로그인 되어 있음: ' + req.session.user.id);
-        res.render('index', {me: req.session.user.id});
-    }
-    else {
-        res.render('index', {me: ''});
-    }
-})
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error("Connect DB Error:", err);
+            res.status(400).send('Could not get a connection');
+        }
+        else {
+            console.log('connect to minostagram db');
+
+            var sql = "select * from post";
+            console.log('Post 조회 SQL: ' + sql);
+
+            conn.query(sql, function(err, results) {
+                if (err) {
+                    console.error("SQL 실행 Error:", err)
+                }
+
+                if (req.session.user) {
+                    console.log('로그인: ' + req.session.user.id);
+                    res.render('index', {me: req.session.user.id, post: results});
+                }
+                else {
+                    console.log('비로그인');
+                    res.render('index', {me: '', post: results});
+                }
+            });
+        }
+        conn.release();
+    });
+});
 
 // 로그인 요청
 app.get('/login/form', function(req, res) {
+    console.log("==== login/form");
     res.render('login');
 });
 
@@ -186,7 +208,7 @@ app.get('/logout', function(req, res) {
         });
     }
     else {
-        console.log('로그인 되어 있지 않음');
+        console.log('비로그인');
         res.redirect('/');
     }
 });
@@ -222,11 +244,14 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
 
         console.log('connect to minostagram db');
 
+        // 이미지파일 경로 문자열을 저장하는데 필요
+        var filepath = req.file.path;
+        filepath = filepath.substr(7).replace(/\\/g, "\/");
+
         var sql = "insert into post(writer, content, upTime, img_path)" + 
             " values('" + req.session.user.id + "', '" + req.body.content + 
-            "', now(), '" + req.file.path + "');";
+            "', now(), '" + filepath + "');";
         console.log('게시글 저장 SQL: ' + sql);
-        // TODO DB에 파일 경로 저장이 제대로 안되는 듯. unescape 때문에.
 
         conn.query(sql, function(err, result) {
             if (!err) {
@@ -241,11 +266,42 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
     });
 });
 
+// post 자세히 보기
 app.get('/post', function(req, res) {
     console.log('==== /post');
 
-    // TODO post?id=~~ 에서 id를 확인하여 DB에서 찾아서 보여주는 post
-    res.render('post');
+    var get = req.query;
+    console.log('입력된 글 정보:', get);
+
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            console.error("Connect DB Error:", err);
+            res.status(400).send('Could not get a connection');
+        }
+        else {
+            console.log('connect to minostagram db');
+
+            var sql = "select * from post where idx=" + get.idx + ";";
+            console.log('특정 Post 조회 SQL: ' + sql);
+
+            conn.query(sql, function(err, result) {
+                if (err) {
+                    console.error("SQL 실행 Error:", err)
+                }
+                console.log('SQL 실행 결과:', result);
+
+                if (req.session.user) {
+                    console.log('로그인: ' + req.session.user.id);
+                    res.render('post', {me: req.session.user.id, post: result[0]});
+                }
+                else {
+                    console.log('비로그인');
+                    res.render('post', {me: '', post: result[0]});
+                }
+            });
+        }
+        conn.release();
+    });
 });
 
 // Web Server 시작.

@@ -4,13 +4,17 @@
     <title>Minostagram</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Custom styles for this template -->
+  <link href="/css/blog-post.css" rel="stylesheet" type="text/css"> 
 </head>
 
 <body>
 <!-- Page Content -->
 <div class="container">
        
-  <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Minostagram</h1>
+  <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+    <a class="title" href="/">Minostagram</a>
+  </h1>
   <hr class="mt-2 mb-5">
   <p style="text-align: right">
     <% if (me == '') { %>
@@ -23,81 +27,17 @@
   </p>
    
   <div class="row text-center text-lg-left">
+    <!-- DB에 저장된 게시글 출력 -->
+    <% post.forEach(function(item) { %>
+      <div class="col-lg-3 col-md-4 col-6">
+        <a href="/post?idx=<%= item.idx%>" class="d-block mb-4 h-100">
+          <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
+        </a>
+      </div>
+    <% }); %>
 
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="/post" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/pWkk7iiCoDM/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/aob0ukAYfuI/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/EUfxH-pze7s/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/M185_qYH8vg/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/sesveuG_rNo/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/AvhMzHwiE_0/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/2gYsZUmockw/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/EMSDtjVHdQ8/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/8mUEy0ABdNE/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/G9Rfc1qccH4/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/aJeH0KcFkuc/400x300" alt="">
-          </a>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <a href="#" class="d-block mb-4 h-100">
-            <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/p2TQ-3Bh3Oo/400x300" alt="">
-          </a>
-    </div>
   </div>
-
-    </div>
     <!-- /.container -->
 </body>
-
-<script>
-
-// 반복문으로 mysql에서 데이터를 가져와 게시판을 출력
-
-// 사진 클릭 시 해당 사진에 대한 데이터를 post.html로 전달해서 출력.
-
-// post.html에서의 댓글에 대한 db 연동.
-
-</script>
 
 </html>
