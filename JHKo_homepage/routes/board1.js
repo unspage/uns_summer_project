@@ -6,6 +6,7 @@ var path = require('path');
 var pool = require(__dirname + '/sql_con');
 var session = require('express-session');
 var url = require('url');
+var multer = require('multer');
 
 //페이징 용 함수
 function paging_calc(curPage, totalPostCnt) {
@@ -144,7 +145,7 @@ router.get('/form', function(req,res,next){
     });
 });
 
-router.post('/save', function(req,res,next){
+router.post('/save:filename', function(req,res,next){
     var data = [req.body.post_title, req.body.post_content, session_name, req.body.post_num];
     console.log("rows : " + data);
     console.log("post_title: " + req.body.post_title);
