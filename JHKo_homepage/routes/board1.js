@@ -106,7 +106,7 @@ router.get('/list', function(req,res,next){
 //향후에 조회수 증가 추가 예정
 router.get('/read', function(req,res,next){
     pool.getConnection(function (err, connection) {
-        var sql = "SELECT post_num, post_content, post_title, username, post_date" +
+        var sql = "SELECT post_num, post_content, post_title, username, post_date, post_file" +
             " FROM post_data" + " WHERE post_num=" + req.query.post_num; +
         console.log("rows : " + sql);
         connection.query(sql, function (err, rows) {
@@ -280,5 +280,18 @@ router.get('/edit', function(req,res,next){
         });
     });
 });
+//파일 다운로드
+router.get('/file_save', function(req, res, next)   {
+    var filename = req.param("file_name");
+    filepath = __dirname + '/../upload/' + filename;
+    res.download(filepath);
+    /*
+    mimetype = mime.lookup(file_name);
+    res.setHeader('Content-disposition', 'attachment; file_name=' + file_name);
+    res.setHeader('Content-type', mimetype);
+    var filestream = fs.createReadStream(file);
+    filestream.pipe(res);
+     */
+})
 
 module.exports=router;
