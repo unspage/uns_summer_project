@@ -1,0 +1,21 @@
+-var infolist = info
+div
+  table.table.table-hover
+   thead
+     tr: th expense_list
+     th(scope='cols' style="width:10%") expense
+     th(scope='cols' style="width:10%") price
+     th(scope='cols' style="width:5%") category
+     th(scope='cols' style="width:15%") date
+     th(scope='cols' style="width:3%") type
+   tbody
+     each info in infos
+       tr
+         td=info.expense
+         td=info.price
+         td=info.category
+         td=info.date
+         td=info.type
+
+
+         

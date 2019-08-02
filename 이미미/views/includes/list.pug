@@ -1,0 +1,28 @@
+-var boardlist = board
+div
+  table.table.table-hover
+   thead
+     tr: th board_list
+     th(scope='cols' style="width:10%") id
+     th(scope='cols' style="width:10%") title
+     th(scope='cols' style="width:5%") views
+     th(scope='cols' style="width:15%") date
+     th(scope='cols' style="width:3%") 읽기
+     th(scope='cols' style="width:3%") 수정
+     th(scope='cols' style="width:3%") 삭제
+
+   tbody
+     each board in boards
+       tr
+         td=board.username
+         td=board.title
+         td=board.views
+         td=board.date
+         td
+            a(href="/read") 읽기
+         td
+            a(href="/edit") 수정
+         td
+            a(href="/delete") 삭제
+
+         

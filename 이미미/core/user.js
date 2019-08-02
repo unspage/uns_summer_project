@@ -6,25 +6,6 @@ function User() {};
 
 User.prototype = {
    
-    list : function(users=null, callback)
-    {
-        let sql='SELECT num, id, title, views FROM board';
-
-        pool.query(sql, user, function(err, result) {
-            if(err) throw err
-
-            if(result.length) {
-                callback(result[0]);
-            }
-            else {
-                callback(null);
-            }
-        });
-        
-
-    },
-
-
     find : function(user = null, callback)
     {
         
@@ -32,10 +13,10 @@ User.prototype = {
             
             var field = Number.isInteger(user) ? 'id' : 'username';
         }
-       
         let sql = `SELECT * FROM users WHERE ${field} = ?`;
-
+        
         pool.query(sql, user, function(err, result) {
+            //console.log(result.id, result.fullname);
             if(err) throw err
 
             if(result.length) {
@@ -46,6 +27,65 @@ User.prototype = {
             }
         });
     },
+
+
+    list : function(user= null, callback) //게시판 목록
+    {       
+        let sql = `SELECT b.num, u.username, b.title, b.views, b.date FROM board AS b JOIN USERS AS u ON b.id=u.id ORDER BY b.date DESC`;//게시판 목록 가져옴
+        
+        pool.query(sql, user, function(err, result) {
+            //console.log(result.num);
+            console.log(result.length);
+            console.log(result[0]);
+            if(err) throw err;
+
+            if(result.length) {
+                callback(result);
+            }
+            else {
+                callback(null);
+            }
+        });
+    },
+
+    mylist : function(userinfo, callback) //게시판 목록
+    {   
+
+        console.log(userinfo.id);
+        let sql = `SELECT expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id}`;//게시판 목록 가져옴
+        
+        pool.query(sql, userinfo, function(err, result) {
+
+            if(err) throw err;
+
+            if(result.length) {
+                callback(result);
+            }
+            else {
+                callback(null);
+            }
+        });
+    },
+
+    plusmylist : function(userinfo, callback) //게시판 목록
+    {   
+
+        console.log(userinfo.id);
+        let sql = `SELECT p_expense, p_price, category, date, type FROM plusinfo AS p JOIN USERS AS u ON p.id=u.id WHERE p.id= ${userinfo.id}`;//게시판 목록 가져옴
+        
+        pool.query(sql, userinfo, function(err, result) {
+
+            if(err) throw err;
+
+            if(result.length) {
+                callback(result);
+            }
+            else {
+                callback(null);
+            }
+        });
+    },
+
 
     create : function(body, callback) //회원가입
     {
@@ -67,7 +107,8 @@ User.prototype = {
         });
     },
 
-    
+
+
     writing : function(body, callback)  //글쓰기
     {
 
@@ -105,6 +146,8 @@ User.prototype = {
         });
     
     },
+
+
 
     plusinfowriting : function(body, callback)  //가계부지출내역기록
     {

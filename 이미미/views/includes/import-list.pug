@@ -1,0 +1,21 @@
+-var plusinfolist = plusinfo
+div
+  table.table.table-hover
+   thead
+     tr: th import_list
+     th(scope='cols' style="width:10%") 수입내역
+     th(scope='cols' style="width:10%") 수입금액
+     th(scope='cols' style="width:5%") 카테고리
+     th(scope='cols' style="width:15%") 날짜
+     th(scope='cols' style="width:3%") type
+   tbody
+     each plusinfo in plusinfos
+       tr
+         td=plusinfo.p_expense
+         td=plusinfo.p_price
+         td=plusinfo.category
+         td=plusinfo.date
+         td=plusinfo.type
+
+
+         

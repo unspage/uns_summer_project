@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../core/user');
 const router = express.Router();
-const Board =require('../core/user')
+const Board =require('../core/user');
 
 const user = new User();
 
@@ -28,26 +28,33 @@ router.get('/home', (req, res, next) => {
 });
 //로그인 했을 때
 
-router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
-    //let user = req.session.user;
-    
-    if(user){
-        res.render('board',{title:"board"});
-        return;
 
-    }
-    res.redirect('/board');
+router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
+  
+    user.list(user, function(result){
+    //req.session.user = result;
+
+    res.render('board', { title: "board_list", boards: result});
+    })
+      
 });
+
 
 router.get('/info',(req, res,next)=>{//가계부로 이동
     //let user = req.session.user;
-    
-    if(user){
+ 
         res.render('info',{title:"가계부"});
-        return;
+  
+});
 
-    }
-    res.redirect('/info');
+router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
+  
+    user.list(user, function(result){
+
+
+    res.render('board', { title: "board_list", boards: result});
+    })
+      
 });
 
 router.get('/write',(req, res,next)=>{//게시판 글쓰기로 이동
@@ -84,6 +91,36 @@ router.get('/mypage',(req, res,next)=>{//회원정보수정
        
 });
 
+router.get('/expense',(req, res,next)=>{//로그인 되어있는 회원의 지출내역
+    let userinfo = req.session.user;
+
+    user.mylist(userinfo, function(result){
+        res.render('expense', { title: "expense_list", infos: result});
+        })
+
+});
+
+router.get('/import',(req, res,next)=>{//로그인 되어있는 회원의 수입내역
+    let userinfo = req.session.user;
+
+    user.plusmylist(userinfo, function(result){
+        res.render('import', { title: "import_list", plusinfos: result});
+        })
+
+});
+
+router.get('/read',(req, res,next)=>{//게시판 글 보여주기
+    if(user){
+        res.render('board_edit',{title:"정보수정"});
+ 
+        return;
+    }
+   res.redirect('/home');
+       
+});
+
+
+
 
 router.post('/login', (req, res, next) => {//로그인이라는 행동을 함 
     
@@ -99,6 +136,8 @@ router.post('/login', (req, res, next) => {//로그인이라는 행동을 함
 
 });
 //로그인이라는 행동
+
+
 
 
 router.post('/register', (req, res, next) => {//회원가입
@@ -224,6 +263,5 @@ router.get('/logout', (req, res, next) => {//logout
         });
     }
 });
-
 
 module.exports = router;
