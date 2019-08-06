@@ -19,26 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/account/login.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="104" column="25" lean-forward="true" selection-start-line="104" selection-start-column="25" selection-end-line="104" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/account/signin.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="117" column="16" lean-forward="true" selection-start-line="117" selection-start-column="16" selection-end-line="117" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/css/bootstrap.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="1557" column="6" selection-start-line="1557" selection-start-column="1" selection-end-line="1557" selection-end-column="6" />
+            <state relative-caret-position="456">
+              <caret line="139" column="74" selection-start-line="139" selection-start-column="74" selection-end-line="139" selection-end-column="74" />
             </state>
           </provider>
         </entry>
@@ -168,6 +150,11 @@
             <path>
               <item name="JHKo_homepage" type="b2602c69:ProjectViewProjectNode" />
               <item name="JHKo_homepage" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="JHKo_homepage" type="b2602c69:ProjectViewProjectNode" />
+              <item name="JHKo_homepage" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -289,7 +276,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="172211000" />
+    <option name="totallyTimeSpent" value="172630000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
@@ -368,8 +355,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/css/bootstrap.css.map">
-      <provider editor-type-id="sourcemapFileViewerProvider" />
       <provider selected="true" editor-type-id="text-editor" />
+      <provider editor-type-id="sourcemapFileViewerProvider" />
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/account.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -420,6 +407,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/account/signin.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1756">
+          <caret line="100" column="9" lean-forward="true" selection-start-line="100" selection-start-column="9" selection-end-line="100" selection-end-column="9" />
+          <folding>
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/css/bootstrap.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="279">
@@ -427,17 +424,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/account/signin.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="117" column="16" lean-forward="true" selection-start-line="117" selection-start-column="16" selection-end-line="117" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/account/login.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="104" column="25" lean-forward="true" selection-start-line="104" selection-start-column="25" selection-end-line="104" selection-end-column="25" />
+        <state relative-caret-position="456">
+          <caret line="139" column="74" selection-start-line="139" selection-start-column="74" selection-end-line="139" selection-end-column="74" />
         </state>
       </provider>
     </entry>
