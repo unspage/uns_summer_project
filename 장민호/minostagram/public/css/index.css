@@ -1,0 +1,15 @@
+body {
+  height: 150%;
+}
+.row {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+  grid-auto-columns: 25%;
+  grid-auto-rows: 20px;
+}
+.col-lg-3.col-md-4.col-6 {
+  float: left;
+  height: fit-content;
+  max-width: 100%;
+}

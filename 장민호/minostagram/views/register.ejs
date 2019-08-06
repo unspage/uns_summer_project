@@ -1,26 +1,15 @@
 <!doctype html>
 <html>
 <head>
-  <title>Minostagram</title>
+  <title>gallery</title>
   <meta charset="utf-8">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" >
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     
   <!-- Custom styles for this template -->
-  <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
+  <link href="/css/register.css" rel="stylesheet" type="text/css">
+  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
 </head>
-
-<style>
-.col-lg-8 {
-    margin: auto;
-}
-.id {
-    padding-inline-start: 8px;
-}
-.pwd {
-    padding-inline-start: 8px;
-}
-</style>
 
 <script>
     function check() {
@@ -45,75 +34,51 @@
 </script>
 
 <body>
-    <h1>회원가입</h1>
-
     <!-- Page Content -->
     <div class="container">
 
-        <div class="col-lg-8">
-            <h1 class="font-weight-light text-center mt-4 mb-0">
-            <a class="title" href="/">Minostagram</a>
-            </h1>
+        <div class="col-lg-5">
+            <header>
+                <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+                    <a class="title" href="/">Neat Gallery</a>
+                </h1>
+            </header>
 
             <div class="card my-4">
                 <h5 class="card-header">회원가입</h5>
                 <div class="card-body">
+
                     <form action="/register" name="register" method="post" onsubmit="return check()">
                         <table align="center">
-                            <tr>
+                            <tr class="table_row">
                                 <td class="col">ID</td>
-                                <td><input type="text" name="id" maxlength="20" class="input_text"></td>
-                                    <!-- TODO 아이디 중복 확인 -->
+                                <td style="text-align: left;"><input type="text" name="id" maxlength="20" class="input_text"></td>
+                                <!-- TODO 아이디 중복 확인 -->
                             </tr>
-                            <tr>
+                            <tr class="table_row">
                                 <td class="col">PW</td>
-                                <td><input type="password" name="pwd" maxlength="20" class="input_text"></td>
+                                <td style="text-align: left;"><input type="password" name="pwd" maxlength="20" class="input_text"></td>
                                 <!-- TODO 회원가입 시 비밀번호 두 번 입력으로 확인 필요-->
                             </tr>
-                            <tr>
+                            <tr class="table_row">
                                 <td class="col">Name</td>
-                                <td><input type="text" name="name" class="input_text"></td>
+                                <td style="text-align: left;"><input type="text" name="name" class="input_text"></td>
                             </tr>
-                            <tr>
+                            <tr class="table_row">
                                 <td class="col">Phone</td>
-                                <td><input type="text" class="phone" name="phone0" maxlength="3"> - <input type="text" class="phone" name="phone1" maxlength="4"> - <input type="text" class="phone" name="phone2" maxlength="4"></td>
+                                <td style="text-align: left;"><input type="text" class="phone" name="phone0" maxlength="3"> - <input type="text" class="phone" name="phone1" maxlength="4"> - <input type="text" class="phone" name="phone2" maxlength="4"></td>
                             </tr>
-                            <tr style="text-align: center; height: 50px;">
-                                <td colspan="2"><input type="submit" value="Sign up"></td>
+                            <tr class="table_row">
+                                <td colspan="2"><button type="submit" class="btn btn-primary">Sign up</button></td>
                             </tr>
                         </table>
                     </form>
+
                 </div>
             </div>
         </div>
 
     </div>
     <!-- end container -->
-
-    <form action="/register" name="register" method="post" onsubmit="return check()">
-        <table class="registerForm" align="center">
-            <tr>
-                <td class="col">ID</td>
-                <td><input type="text" name="id" maxlength="20" class="input_text"></td>
-                 <!-- TODO 아이디 중복 확인 -->
-            </tr>
-            <tr>
-                <td class="col">PW</td>
-                <td><input type="password" name="pwd" maxlength="20" class="input_text"></td>
-                <!-- TODO 회원가입 시 비밀번호 두 번 입력으로 확인 필요-->
-            </tr>
-            <tr>
-                <td class="col">Name</td>
-                <td><input type="text" name="name" class="input_text"></td>
-            </tr>
-            <tr>
-                <td class="col">Phone</td>
-                <td><input type="text" class="phone" name="phone0" maxlength="3"> - <input type="text" class="phone" name="phone1" maxlength="4"> - <input type="text" class="phone" name="phone2" maxlength="4"></td>
-            </tr>
-            <tr style="text-align: center; height: 50px;">
-                <td colspan="2"><input type="submit" value="Sign up"></td>
-            </tr>
-        </table>
-    </form>
 </body>
 </html>

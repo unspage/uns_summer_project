@@ -25,21 +25,22 @@
         
                 <hr>
                 
-                <form action='/edit/post_up' method='POST' enctype='multipart/form-data'>
+                <form action='/post/<%= post.idx %>/update' method='POST' enctype='multipart/form-data'>
                     <!-- Preview Image -->
                     <div class="filebox bs3-primary">
                         <label for="ex_file">사진 선택</label>
-                        <input type="file" id="ex_file" name="img"> 
+                        <input type="file" id="ex_file" name="img" /> 
                     </div>
-                    <img class="img-fluid rounded" id="image_section" src="/select_image.png" alt="your image">
+                    <img class="img-fluid rounded" id="image_section" src="/<%= post.img_path %>" alt="your image">
             
                     <hr>
         
                     <!-- Post Content -->
                     <div class="form-group">
-                        <textarea class="form-control" rows="3" name="content"></textarea>
+                        <textarea class="form-control" rows="3" name="content"><%= post.content %></textarea>
                     </div>
                     <div class="btn_right">
+                        <input type='hidden' name='post_idx' value=<%= post.idx %>>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>

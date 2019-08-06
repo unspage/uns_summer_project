@@ -1,4 +1,27 @@
-a.title:link {text-decoration: none; color:#646464}
-a.title:visited {text-decoration: none; color:#646464}
-a.title:active {text-decoration: none; color:#646464}
-a.title:hover {text-decoration: none; color:#646464}
+.btn_right {
+    text-align: right;
+}
+.form-control {
+    width: 85%;
+    float: left;
+}
+.btn_right {
+  line-height: 50px;
+}
+.btn_right button {
+  vertical-align: bottom;
+}
+.comment_time {
+  font-size: 10pt;
+  color: gray;
+}
+.btn_delete {
+  font-size: 9.5pt;
+  padding: 5px 10px 5px 10px;
+  color: rgb(59, 59, 59);
+  background-color: rgb(211, 211, 211);
+  border-color: rgb(211, 211, 211);
+}
+.post_delete {
+  float: right;
+}

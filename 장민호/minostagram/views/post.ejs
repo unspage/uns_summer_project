@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Minostagram - Post</title>
+  <title>gallery</title>
 
   <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -16,30 +16,37 @@
   
   <!-- Custom styles for this template -->
   <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
-  
+  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
   <!-- Page Content -->
   <div class="container">
-
     <div class="row">
 
       <!-- Post Content Column -->
       <div class="col-lg-8">
-
         <!-- Title -->
-        <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
-          <a class="title" href="/">Minostagram</a>
-        </h1>
-
+        <header>
+          <% include ./header %>
+        </header>
         <hr>
-
-        <!-- Date/Time -->
-        <p class="lead">Posted by
-          <a href="#"><%= post.writer %></a><br>
+        
+        <!-- writer / datetime -->
+        <div class="lead">Posted by
+          <a class="link_writer" href="/mypage/<%= post.writer %>"><%= post.writer %></a>
+          <% if (post.writer == me) { %>
+            <span class="post_delete">
+              <button type="button" class="btn btn-success btn_delete" onclick='location.href="/post/<%= post.idx %>/update/form"'>글 수정</button>
+              <button type="button" class="btn btn-danger btn_delete" onclick='location.href="/post/<%= post.idx %>/delete"'>글 삭제</button>
+            </span>
+          <% } %>
+          <br>          
           <%= post.upTime %>
-        </p>
+          <div style="float: right;">
+            GOOD <%= post.good %>
+          </div>  
+        </div>
 
         <hr>
 
@@ -54,28 +61,47 @@
         </p>
         <hr>
 
+        <!-- 좋아요 -->
+        <!--TODO 좋아요 버튼 또는 이미지-->
+        <div style="text-align: center">
+          <button type="button" class="btn btn-primary" onclick="location.href='/post/<%=post.idx %>/good'">GOOD</button>
+        </div>
+
         <!-- Comments Form -->
-
-
         <div class="card my-4">
-          <h5 class="card-header">댓글쓰기</h5>
+          <h5 class="card-header">Comments</h5>
           <div class="card-body">
-            <form action="#">
+
+            <form action="/post/<%= post.idx %>/comment">
               <div class="form-group">
-                <textarea class="form-control" rows="2"></textarea>
+                <textarea class="form-control" name="content" rows="2"></textarea>
+                <div class="btn_right">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
           </div>
+
         </div>
 
         <!-- Single Comment -->
+        <% comment.forEach(function(item) { %>
         <div class="media mb-4">
           <div class="media-body">
-            <h5 class="mt-0">댓글 글쓴이</h5>
-            댓글 댓글 댓글
+
+            <h5 class="mt-0"><%= item.writer %> &nbsp;&nbsp;<span class="comment_time"><%= item.upTime %></span>
+              <div style="float: right">
+                <button type="button" onclick='location.href="/post/<%= post.idx %>/comment/delete?writer=<%= item.writer %>"' class="btn btn-danger btn_delete">삭제</button>
+              </div>
+            </h5>
+            <div>
+              <%- item.content.replace(/\r\n/g, "<br>") %>
+            </div>
+
           </div>
         </div>
+        <% }); %>
 
       </div>
     </div>

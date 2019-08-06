@@ -1,0 +1,17 @@
+<div>
+        <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+                <a class="title" href="/">Neat Gallery</a>
+        </h1>
+        <div style="text-align: right; float: right; margin-top: -20px;">
+                <% if (me == '') { %>
+                        <a href="/login/form">로그인 </a>&nbsp;/&nbsp;
+                        <a href="/register/form">회원가입 </a>
+                <% }
+                else { %>
+                        <b><%= me %></b>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="/mypage/<%= me %>">My page </a>&nbsp;/&nbsp;
+                        <a href="/logout">로그아웃 </a>&nbsp;/&nbsp;
+                        <a href="/edit">글쓰기 </a>
+                <% } %>
+        </div>
+</div>

@@ -1,40 +1,48 @@
 <html>
 
 <head>
-    <title>Minostagram</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>gallery</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  
   <!-- Custom styles for this template -->
-  <link href="/css/blog-post.css" rel="stylesheet" type="text/css"> 
+  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
+  <link href="/css/index.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
-<!-- Page Content -->
-<div class="container">
-       
-  <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
-    <a class="title" href="/">Minostagram</a>
-  </h1>
-  <hr class="mt-2 mb-5">
-  <p style="text-align: right">
-    <% if (me == '') { %>
-      <a href="/login/form">로그인</a>
-    <% }
-    else { %>
-      <b><%= me %></b> &nbsp; <a href="/logout">로그아웃</a>
-    <% } %>
-    &nbsp;/ <a href="/edit">글쓰기</a>
-  </p>
-   
-  <div class="row text-center text-lg-left">
-    <!-- DB에 저장된 게시글 출력 -->
-    <% post.forEach(function(item) { %>
+<script src="/js/index.js"></script>
+
+<style>
+.order {
+  margin-bottom: 5px;
+}
+</style>
+
+<body onload="resizeAllGridItems()">
+  <!-- Page Content -->
+  <div class="container">
+        
+    <header>
+      <% include ./header %>
+    </header>
+    <hr class="mb-2">
+
+    <!--TODO 리스트처럼 시간순이 선택되면 추천순은 선택안되고 하는 시스템. 선택된 것은 글씨 굵게.-->
+    <div class="order font-weight-light">
+      <b><</b> <a href="#">시간 순 </a>&nbsp;&nbsp;
+      <a href="#">추천 순 </a> <b>></b>
+    </div>
+
+    <div class="row text-center text-lg-left">
+      <!-- DB에 저장된 게시글 출력 -->
+      <% post.forEach(function(item) { %>
       <div class="col-lg-3 col-md-4 col-6">
-        <a href="/post?idx=<%= item.idx%>" class="d-block mb-4 h-100">
+        <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
           <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
         </a>
       </div>
-    <% }); %>
+      <% }); %>
+    </div>
 
   </div>
     <!-- /.container -->

@@ -1,0 +1,30 @@
+.container {
+    text-align: center;
+}
+.col-lg-5 {
+    margin: auto;
+}
+.card {
+    min-width: 400px;
+}
+.id {
+    padding-inline-start: 8px;
+}
+.pwd {
+    padding-inline-start: 8px;
+}
+.phone {
+    width: 60px;
+    padding-inline-start: 8px;
+}
+.input_text {
+    padding-inline-start: 8px;
+}
+.col {
+    width: 100px;
+    text-align: left;
+}
+.table_row {
+    text-align: center;
+    height: 40px;   
+}

@@ -1,20 +1,20 @@
 <!doctype html>
 <html>
 <head>
-  <title>Minostagram</title>
+  <title>gallery</title>
   <meta charset="utf-8">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" >
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     
   <!-- Custom styles for this template -->
-  <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
+  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
 </head>
 
 <style>
 .container {
   text-align: center;
 }
-.col-lg-6 {
+.col-lg-5 {
   margin: auto;
 }
 .id {
@@ -28,14 +28,17 @@
   <!-- Page Content -->
   <div class="container">
 
-      <div class="col-lg-6">
-        <h1 class="font-weight-light text-center mt-4 mb-0">
-          <a class="title" href="/">Minostagram</a>
-        </h1>
+      <div class="col-lg-5">
+        <header>
+          <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+            <a class="title" href="/">Neat Gallery</a>
+          </h1>        
+        </header>
 
         <div class="card my-4">
             <h5 class="card-header">로그인</h5>
             <div class="card-body">
+
               <form action="/login" method="post">
                 <div class="form-group">
                   <input type="text" name="id" placeholder="ID" class="id">
@@ -46,6 +49,7 @@
                 <button type="submit" class="btn btn-primary">Log in</button>
                 <button type="button" class="btn btn-primary" onclick="location.href='/register/form'">Sign up</button>
               </form>
+
             </div>
         </div>
       </div>

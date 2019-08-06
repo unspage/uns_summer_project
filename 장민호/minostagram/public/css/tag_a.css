@@ -1,0 +1,4 @@
+a:link:not(.link_writer) {text-decoration: none; color:#646464}
+a:visited:not(.link_writer) {text-decoration: none; color:#646464}
+a:active:not(.link_writer) {text-decoration: none; color:#646464}
+a:hover:not(.link_writer) {text-decoration: none; color:#646464}
