@@ -12,7 +12,7 @@
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                  <a class="navbar-brand" href="#">Hidden brand</a>
+                  <a class="navbar-brand" href="#">QnA 게시판</a>
                   <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item active">
                       <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
@@ -46,9 +46,9 @@
                 <% result.forEach(function(item) { %>
                <tr>
                   <th width = "15%"> <%= item.idx %> </th>
-                  <th width = "50%"> <%= item.title %> </th>
+                  <th width = "50%"><a href ="/boardView?idx=<%= item.idx %> "> <%= item.title %> </th>
                   <th width = "20%"> <%= item.writer %></th>
-                  <th width = "15%"> <%= item.regdate %></th>
+                  <th width = "15%"> <%= item.regdate.getMonth()%>월 <%= item.regdate.getDate()%>일</th>
               </tr>	 	
               <% }); %>   
               <tr align="center">
@@ -57,9 +57,51 @@
                         data-toggle="button" aria-pressed="false" autocomplete="off"
                         onclick="location.href='http://localhost:3000/write'" >
                     <td>&nbsp;</td>
+                    
                 </tr>
           </tbody>
         </table>
    </div>
+   <nav aria-label="...">
+    <ul class="pagination justify-content-center">
+
+      <%
+      var page = result2.page
+      var page_size = result2.page_size
+      var page_list_size = result2.page_list_size
+      var totalCount =  result2.totalCount
+      var totalPage = result2.totalPage
+      var startPage = result2.startPage
+      var endPage = result2.endPage
+      %>
+
+      <% if (startPage >= 10 )  {  %>
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+      </li>
+      <% } %>
+      <% for (var i = startPage;i<=endPage;i++) { %>
+        <% if (i == page) { %>
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="/boardlist?page=<%=i%>"><%=i%> <span class="sr-only"><%=i%></span></a>
+          </li>
+        <% } else { %>
+          <li class="page-item"><a class="page-link" href="/boardlist?page=<%=i%>"><%=i%></a></li>
+        <% } %>
+      <% } %>
+      
+
+      <!--
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    -->
+    </ul>
+  </nav>
+   
+   
 </body>
 </html>

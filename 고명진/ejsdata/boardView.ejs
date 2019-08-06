@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <title>글쓰기</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- include libraries(jQuery, bootstrap) -->
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+        <link href="/ejsdata/style.css" rel="stylesheet">
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+    
+        <!-- include summernote css/js -->
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+</head>
+<body>
+<div class="row">
+    <div class="col-xs-2 col-md-2"></div>
+    <div class="col-xs-8 col-md-8">
+    <h2 class="text-center">게시글 보기</h2><p>&nbsp;</p>
+    <div class="table table-responsive">
+        <% result.forEach(function(item) { %>
+        <table class="table">
+        <tr>
+            <th class="success">글번호</th>
+            <td><%= item.idx %></td>
+            <th class="success">조회수</th>
+            <td>22</td>
+        </tr>
+           
+         
+        <tr>
+            <th class="success">작성자</th>
+            <td><%= item.writer %></td>
+            <th class="success">작성일</th>
+            <td><%=item.regdate.getYear()%>년 <%= item.regdate.getMonth()%>월 <%= item.regdate.getDate()%>일</td>
+        </tr>
+         
+        <tr>
+            <th class="success">이메일</th>
+            <td colspan="3">coke_mania@naver.com</td>
+        </tr>
+         
+        <tr>
+            <th class="success">제목</th>
+            <td colspan="3"><%= item.title %></td>
+        </tr>
+         
+        <tr>
+            <th class="success">글 내용</th>
+            <td colspan="3"><%= item.content %></td>
+        </tr>
+         
+        <tr>
+            <td colspan="4" class="text-center">
+              <input type="button" class="btn btn-success"  value="답글 쓰기"
+onclick="location.href=''"  >
+    <input type="button" class="btn btn-warning" value="수정하기" onclick="location.href=''">          
+<input type="button" class="btn btn-danger" value="삭제하기" onclick="location.href=''">
+<input type="button" class="btn btn-primary" value="목록보기" onclick="location.href='http://localhost:3000/boardlist/?page=1'">
+            </td>
+        </tr>
+        </table>
+        <% }); %>
+    </div>
+     
+    </div>
+</div>
+<div class="write-form">
+    <h2>답변달기</h2>
+    <form  action="/comment_action?idx=<%= result[0].idx %>" method="POST">
+        <div id="summernote"  class="click2edit" ><p> 이렇게 하면 됩니다 </p></div>
+        <button type="submit" class="btn btn-success">등록하기</button>
+      </form>
+      
+        <script>
+          $(document).ready(function() {
+              $('#summernote').summernote({
+                  tabsize: 2,
+                  height: 300,
+                  lang: 'ko-KR' // 언어 세팅
+              });
+          });
+        </script>
+</div>
+ 
+</body>
+</html>
