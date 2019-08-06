@@ -6,12 +6,15 @@
     <style>
         .login-form {
             width: 300px;
-            margin: 0 auto;
             font-family: Tahoma, Geneva, sans-serif;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform:translate(-50%, -50%)
         }
         .login-form h1 {
             text-align: center;
-            color: #4d4d4d;
+            color: #ffffff;
             font-size: 24px;
             padding: 20px 0 20px 0;
         }
@@ -64,6 +67,69 @@
             color: rgba(255, 255, 255, 0.85);
             box-shadow: rgba(30, 22, 54, 0.7) 0 0px 0px 40px inset;
         }
+        #background  {
+            position: fixed; top: -55%; left: -50%; width: 200%; height: 200%;
+        }
+        #background img  {
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            margin:auto;
+            min-width:50%;
+            min-height:50%;
+
+            -webkit-transition: opacity 1s ease-in-out;
+            -moz-transition: opacity 1s ease-in-out;
+            -o-transition: opacity 1s ease-in-out;
+            transition: opacity 1s ease-in-out;
+        }
+        /*
+        Percentage for keyframes:
+
+        1) 0%
+        2) a/t*100%
+        3) (a+b)/t*100% = 1/n*100%
+        4) 100%-(b/t*100%)
+        5) 100%
+         */
+        @keyframes backgroundFadeInOut {
+            0% {
+                opacity:1;
+            }
+            45% {
+                opacity:1;
+            }
+            55% {
+                opacity:0;
+            }
+            75% {
+                opacity:0;
+            }
+            100% {
+                opacity:0;
+            }
+        }
+        #background img {
+            animation-name: backgroundFadeInOut;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-duration: 8s;
+            animation-direction: alternate;
+        }
+        #background img:nth-of-type(1) {
+            animation-delay: 15s;
+        }
+        #background img:nth-of-type(2) {
+            animation-delay: 10s;
+        }
+        #background img:nth-of-type(3) {
+            animation-delay: 5s;
+        }
+        #background img:nth-of-type(4) {
+            animation-delay: 0s;
+        }
     </style>
 </head>
 <script type="text/javascript">
@@ -78,6 +144,12 @@
     }
 </script>
 <body>
+<div id="background" class="shadow">
+    <img src="https://images6.alphacoders.com/929/thumb-1920-929255.jpg"/>
+    <img src="https://images5.alphacoders.com/929/thumb-1920-929254.png"/>
+    <img src="https://images7.alphacoders.com/854/thumb-1920-854155.jpg"/>
+    <img src="https://images3.alphacoders.com/841/thumb-1920-841918.jpg"/>
+</div>
 <div class="login-form">
     <h1>Login Form</h1>
     <form name='myForm' method="POST">
@@ -89,5 +161,6 @@
         <input type="button" name="signin_btn" value="회원가입" onclick='mySubmit(2)'>
     </form>
 </div>
+
 </body>
 </html>
