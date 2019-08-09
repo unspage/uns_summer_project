@@ -2,7 +2,20 @@ const express = require('express');
 const User = require('../core/user');
 const router = express.Router();
 const Board =require('../core/user');
+var multer = require('multer')
+var upload = multer({ dest: "uploads/"});
+var fs=require('fs');
 
+//var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
+  }
+})
+var upload = multer({ storage: storage })
 const user = new User();
 
 router.get('/', (req, res, next) => {
@@ -17,6 +30,23 @@ router.get('/', (req, res, next) => {
     
 })//맨 처음 시작 화면
 
+router.post('/upload', upload.single('userfile'), function(req, res){
+
+    let photoinput={
+        user : req.session.user.id,    
+        path : req.file.path,
+        filename : req.file.filename,
+        title :req.body.title,
+    }
+    console.log(photoinput);
+
+   user.PHOTO(photoinput, function(result){
+    req.session.user = result;
+    res.redirect('/upload');
+
+   })
+  });
+
 router.get('/home', (req, res, next) => {
     let user = req.session.user;
 
@@ -28,7 +58,6 @@ router.get('/home', (req, res, next) => {
 });
 //로그인 했을 때
 
-
 router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
   
     user.list(user, function(result){
@@ -36,7 +65,7 @@ router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
 
     res.render('board', { title: "board_list", boards: result});
     })
-      
+
 });
 
 
@@ -47,16 +76,26 @@ router.get('/info',(req, res,next)=>{//가계부로 이동
   
 });
 
-router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
+router.get('/upload',(req, res,next)=>{//photo목록
   
-    user.list(user, function(result){
+    user.p_list(user, function(result){
+            res.render('upload', { title: "upload", photos: result});
 
-
-    res.render('board', { title: "board_list", boards: result});
     })
-      
 });
 
+router.get('/board/:num' ,(req, res,next)=>{//글 하나하나 읽기
+
+    let num=req.params.num;
+    console.log(num);
+   user.read(num, function(result){
+        res.render('board_read', { title: "board_read", boards: result});
+    })
+    
+
+});
+
+    
 router.get('/write',(req, res,next)=>{//게시판 글쓰기로 이동
     //let user = req.session.user;
     
@@ -68,6 +107,19 @@ router.get('/write',(req, res,next)=>{//게시판 글쓰기로 이동
    res.redirect('/board');
        
 });
+
+router.get('/board/edit/:num',(req, res,next)=>{//게시판 글수정
+    //let user = req.session.user;
+    
+    if(user){
+        res.render('edit-write',{title:"edit-write"});
+ 
+        return;
+    }
+   res.redirect('/board');
+       
+});
+
 //글 작성화면
 router.get('/infowrite',(req, res,next)=>{//가계부 작성으로이동
     //let user = req.session.user;
@@ -93,9 +145,13 @@ router.get('/mypage',(req, res,next)=>{//회원정보수정
 
 router.get('/expense',(req, res,next)=>{//로그인 되어있는 회원의 지출내역
     let userinfo = req.session.user;
-
+    
     user.mylist(userinfo, function(result){
+        if(result){
         res.render('expense', { title: "expense_list", infos: result});
+    }
+
+
         })
 
 });
@@ -104,11 +160,13 @@ router.get('/import',(req, res,next)=>{//로그인 되어있는 회원의 수입
     let userinfo = req.session.user;
 
     user.plusmylist(userinfo, function(result){
+        if(result){
         res.render('import', { title: "import_list", plusinfos: result});
+    }
         })
 
 });
-
+/*
 router.get('/read',(req, res,next)=>{//게시판 글 보여주기
     if(user){
         res.render('board_edit',{title:"정보수정"});
@@ -118,10 +176,7 @@ router.get('/read',(req, res,next)=>{//게시판 글 보여주기
    res.redirect('/home');
        
 });
-
-
-
-
+*/
 router.post('/login', (req, res, next) => {//로그인이라는 행동을 함 
     
     user.login(req.body.username, req.body.password, function(result) {
@@ -136,9 +191,6 @@ router.post('/login', (req, res, next) => {//로그인이라는 행동을 함
 
 });
 //로그인이라는 행동
-
-
-
 
 router.post('/register', (req, res, next) => {//회원가입
     
@@ -178,6 +230,63 @@ router.post('/writing', (req, res, next) => {
     });
     
 });//게시판 글 작성하는 행동
+
+router.post('/edit-writing/:num', (req, res, next) => {//미완:글 수정
+    
+    
+    let editwriteInput = {
+        num:req.body.number,
+        title: req.body.title,
+        content: req.body.content,
+        id: req.session.user.id
+   
+        //number: req.body.number
+    };
+    //console.log(num);
+    console.log(editwriteInput);
+    user.edit_writing(editwriteInput, function(insertid) {
+        req.body.id = insertid;
+        res.redirect('/board');
+    });
+    
+});
+
+router.post('/board/delete/:num', (req, res, next) => {
+    //let num=req.params.num;
+    //let id= req.session.user.id;
+    let board_delete = {
+        num : req.params.num,
+        id : req.session.user.id
+    };
+     console.log(board_delete);
+     //console.log(id);
+    //console.log(deleteInput);
+     user.board_delete(board_delete,function(insertid) {
+         req.body.id = insertid;
+         res.redirect('/board');
+     });
+     
+ });
+
+ router.post('/upload/delete/:p_title', (req, res, next) => {
+    //let p_title=req.params.p_title;
+    //let id= req.session.user.id;
+
+    let upload_delete = {
+        
+        p_title:req.params.p_title,
+        id:req.session.user.id
+    };
+     console.log(upload_delete);
+     //console.log(id);
+    //console.log(deleteInput);
+    
+     user.photo_delete(upload_delete,function(insertid) {
+         req.body.id = insertid;
+         res.redirect('/upload');
+     });
+     
+ });
 
 router.post('/mypaging', (req, res, next) => {//회원정보수정
     
