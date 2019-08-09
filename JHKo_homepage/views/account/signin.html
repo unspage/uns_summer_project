@@ -5,7 +5,6 @@
     <title>회원가입</title>
     <style>
         body {
-            background-image: url(http://p1.pichost.me/i/11/1344899.jpg);
             background-size: cover;
             background-repeat: no-repeat;
             font-family: Arial, sans-serif;
@@ -49,12 +48,12 @@
             padding: 20px 30px;
         }
         a.button {
-            color: rgba(30, 22, 54, 0.6);
-            box-shadow: rgba(30, 22, 54, 0.4) 0 0px 0px 2px inset;
+            color: rgba(0, 0, 0, 1);
+            box-shadow: rgba(0, 0, 0, 1) 0 0px 0px 2px inset;
         }
         a.button:hover {
             color: rgba(255, 255, 255, 0.85);
-            box-shadow: rgba(30, 22, 54, 0.7) 0 0px 0px 40px inset;
+            box-shadow: rgba(0, 0, 0, 1) 0 0px 0px 40px inset;
         }
         table.type02 {
             border-collapse: separate;
@@ -86,6 +85,17 @@
             border-bottom: 1px solid #ccc;
             background: #ffffff
         }
+        #video_bg   {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1000;
+            overflow: hidden;
+        }
     </style>
 </head>
 <script type="text/javascript">
@@ -100,6 +110,10 @@
     }
 </script>
 <body style="background-color:#f0f5f3">
+<video id="video_bg" preload="auto" autoplay="true" loop="loop" muted="muted" volume="0">
+    <source src="../../data/mp4_video.mp4" type="video/mp4">
+    <source src="../../data/webm_video.webm" type="video/webm">
+</video>
 <div class="sign_in-form">
     <h1> 회원가입</h1>
     <form name='myForm' method="POST">

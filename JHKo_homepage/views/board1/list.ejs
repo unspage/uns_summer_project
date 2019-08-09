@@ -34,7 +34,10 @@
     <tbody>
     <%
     var x = paging.curPage;
-    if (x==undefined)   {
+    if (paging == undefined)    {
+        x=1;
+    }
+    else if (x == undefined)   {
         x = 1;
     }
     var postCnt = paging.totalPostCnt - 1;
