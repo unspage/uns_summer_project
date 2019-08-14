@@ -8,6 +8,8 @@ var moment = require('moment');
 var mysql = require('mysql');
 var sessionId;
 
+
+
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 var bodyParser = require('body-parser');
@@ -26,7 +28,8 @@ var connection = mysql.createConnection({
   user: 'root',
   password: 'root',
   port: '3306',
-  database: 'my_db'
+  database: 'my_db',
+  dateStrings: 'date'
 });
 
 app.use(express.static('./'));
@@ -58,7 +61,12 @@ app.post('/login_action', function (req, res) {
 
         else {
           if (rows[0] != undefined) {
-            req.session.name =  post.id;
+            req.session.user = {
+              id : post.id,
+              pw : post.pw,
+              authorized : true
+            };
+            console.log('로그인 되었습니다',req.session.user);
             res.redirect('http://localhost:3000/boardlist?page=1')
           }
           else {
@@ -101,9 +109,10 @@ app.post('/signupAction', function (req, res) {
   })
 })
 app.get('/write', function (req, res) {
-  res.render('write')
+  res.render('write',{sessionId:sessionId})
 })
 app.post('/write_action', function (req, res) {
+  console.log('req.body = ',req.body);
   var body = '';
   var title = '';
   var content = '';
@@ -116,11 +125,10 @@ app.post('/write_action', function (req, res) {
     var post = qs.parse(body);
 
     title = post.title;
-    writer = post.writer;
     content = post.content;
 
     connection.query(`INSERT INTO board (title,writer,content,hit,regdate,moddate) 
-        VALUES ('${title}','${writer}','${content}',1,'${time}','${time}')`, function (err, rows, username, userPW) {
+        VALUES ('${title}','${sessionId}','${content}',1,'${time}','${time}')`, function (err, rows, username, userPW) {
         if (err) {
           console.log('Error while performing Query.', err);
           res.render('signup')
@@ -141,12 +149,12 @@ app.get('/boardlist', function (req, res) {
   var totalPage = 0;
   var startPage = 0;
   var endPage = 0;
-  
+
   var reulst2;
 
   if(req.session.count) req.session.count++;
   else  req.session.count = 1;
-  
+  if (req.session.user) sessionId = req.session.user.id;
   console.log(req.session.count);
 
   connection.query(`select count(*) as cnt from board`, function (err, result) {
@@ -178,7 +186,7 @@ app.get('/boardlist', function (req, res) {
       console.log('mysql Error');
     }
     else {
-      res.render('boardlist', { result: result, result2: result2 })
+      res.render('boardlist', { result: result, result2: result2 ,sessionId:sessionId})
     }
   })
 })
@@ -190,7 +198,15 @@ app.get('/boardView', function (req, res) {
       return;
     }
     else {
-      res.render('boardView',{result:result})
+      result2 = connection.query(`select * from board_comment where Pidx = ${curPage} order by recommend desc`,function(err,result2) {
+        if (err) {
+          console.log('Error Errorrrrrrrrrrr')
+        }
+        else {
+          res.render('boardView',{result:result,result2:result2,sessionId:sessionId})
+        }
+      });
+      
     }
   });
   
@@ -210,18 +226,34 @@ app.post('/comment_action', function (req, res) {
     content = post.content;
     pid = req.query.idx;
     connection.query(`INSERT INTO board_comment (content,Pidx,wirter,date) 
-    VALUES ('${content}','${pid}','${writer}','${time}')`, function (err) {
+    VALUES ('${content}','${pid}','${sessionId}','${time}')`, function (err) {
     if (err) {
       console.log('Error while performing Query.', err);
       res.render('boardView')
     }
     else {
       console.log('Comment is success');
-      res.redirect(`http://localhost:3000/boardView?idx=${pid}`)
+      connection.query(`select * from board where idx = ${pid}`, function (err, result) {
+        if (err) {
+          console.log(err + 'mysql error');
+          return;
+        }
+        else {
+          connection.query(`update board set commentN = commentN + 1 where idx = ${pid}`)
+          res.redirect(`http://localhost:3000/boardView?idx=${pid}`)
+        }
+      });
     }
   })
   })
 
+})
+
+app.get('/recommend',function(req,res) {
+  var idx = req.query.idx;
+  var ridx = req.query.ridx;
+  connection.query(`update board_comment set recommend = recommend + 1 where idx = ${ridx}`)
+  res.redirect(`http://localhost:3000/boardView?idx=${idx}`)
 })
 app.listen(3000, function () {
   console.log("서버가동")

@@ -7,48 +7,74 @@
 
 </head>
 <body>
-        <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                  <a class="navbar-brand" href="#">QnA 게시판</a>
-                  <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                  </ul>
-                  <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-                </div>
-              </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="/ejsdata/naver.png" width="100" height="30" class="d-inline-block align-top" alt="">
+            Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+           <nav class="navbar fixed-right navbar-light bg-light">
+              <a class="nav-item dropdown" href="#">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                      </div>
+              </a>
+            </nav>
+
+        </div>
+      </nav>
     <div class = "container">
-        <h2> Test Table </h2>
+        <h2> Tech Q&A </h2>
         <p2> 게시판 </p2>
         <table class = "table">
           <thread>
               <tr class= "danger">
                   <th width = "15%"> 번호 </th>
-                  <th width = "50%"> 제목 </th>
+                  <th width = "40%"> 제목 </th>
+                  <th witdh = "10%"> </th>
                   <th width = "20%"> 작성자</th>
                   <th width = "15%"> 작성일</th>
               </tr>
           </thread>
           <tbody>
+            <% var date = new Date(); %>
                 <% result.forEach(function(item) { %>
+                  <% var date2 = new Date(item.regdate) %>
+                  <% var diffTime = ((date.getTime() - date2.getTime())/ (1000*60)) %> <!-- 분 차이 -->
                <tr>
-                  <th width = "15%"> <%= item.idx %> </th>
-                  <th width = "50%"><a href ="/boardView?idx=<%= item.idx %> "> <%= item.title %> </th>
+                  <th width = "10%"> <%= item.idx %> </th>
+                  <th width = "40%">
+                    <a href ="/boardView?idx=<%= item.idx %> " style="color:black;" > <%= item.title %> 
+                    <% if (diffTime < 60*24 ) { %> 
+                      <span class="badge badge-pill badge-primary">New </span>
+                    <% }%>
+                  </th>
+                  <th width = "10%" > 
+                    <% if (item.commentN != 0) { %>  
+                    <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="comment-alt" class="svg-inline--fa fa-comment-alt fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><path fill="currentColor" d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"></path></svg>
+                    <span class="badge badge-secondary"><%= item.commentN %></span>
+                    <% } %>
+                  </th>
                   <th width = "20%"> <%= item.writer %></th>
-                  <th width = "15%"> <%= item.regdate.getMonth()%>월 <%= item.regdate.getDate()%>일</th>
+                  <th width = "20%"> 
+                      <% if(diffTime <= 1) { %>
+                      방금전 
+                      <% } else if (diffTime < 60) { %> 
+                      <%=Math.ceil(diffTime)%>분 전
+                      <% } else if (diffTime < 60*24) { %> 
+                        <%=Math.ceil(diffTime/60)%>시간 전
+                      <% } else { %>
+                        <%= item.regdate %>
+                      <% } %>
+                  </th>
               </tr>	 	
               <% }); %>   
               <tr align="center">
@@ -101,7 +127,6 @@
     -->
     </ul>
   </nav>
-   
    
 </body>
 </html>
