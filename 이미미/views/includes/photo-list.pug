@@ -1,0 +1,17 @@
+-var photolist = photo
+div
+  table.table.table-hover
+   thead
+     th(style="width:10%") ID
+     th(style="width:10%") 제목
+
+     th(style="width:3%") 삭제
+   tbody
+     each photo in photos
+       tr
+         td=photo.username
+         td
+            a(href ='/upload/'+ photo.p_title) #{photo.title} 
+         td
+            form(method="post" action="/upload/delete/"+photo.p_title)
+                input(type="submit" value="DELETE")

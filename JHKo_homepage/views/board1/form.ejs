@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../css/bootstrap-reboot.css">
 </head>
 
-<form name="form1" action='/board1/save' method="post">
+<form name="form1" action='/board1/save' method="post" enctype="multipart/form-data">
     <table class="table table-bordered">
         <colgroup>
             <col width='10%' />
@@ -25,6 +25,10 @@
         <tr>
             <td class="text-center">내용</td>
             <td><textarea name="post_content" rows="5" cols="60"><%=row.post_content%></textarea></td>
+        </tr>
+        <tr>
+            <td class="text-center">이미지</td>
+            <td><input type="file" name="file"></td>
         </tr>
         </tbody>
     </table>

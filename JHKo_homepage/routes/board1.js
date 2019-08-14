@@ -6,6 +6,8 @@ var path = require('path');
 var pool = require(__dirname + '/sql_con');
 var session = require('express-session');
 var url = require('url');
+var multer = require('multer');
+var formidable = require('formidable');
 
 //페이징 용 함수
 function paging_calc(curPage, totalPostCnt) {
@@ -104,7 +106,7 @@ router.get('/list', function(req,res,next){
 //향후에 조회수 증가 추가 예정
 router.get('/read', function(req,res,next){
     pool.getConnection(function (err, connection) {
-        var sql = "SELECT post_num, post_content, post_title, username, post_date" +
+        var sql = "SELECT post_num, post_content, post_title, username, post_date, post_file" +
             " FROM post_data" + " WHERE post_num=" + req.query.post_num; +
         console.log("rows : " + sql);
         connection.query(sql, function (err, rows) {
@@ -144,7 +146,64 @@ router.get('/form', function(req,res,next){
     });
 });
 
-router.post('/save', function(req,res,next){
+router.post('/save', function(req,res){
+    var title;
+    var content;
+    var file_name;
+    var form = new formidable.IncomingForm();
+    /*
+    form.parse(req, function(err, fields, files)    {
+        console.log(files);
+        console.log(fields);
+    });
+     */
+    form.uploadDir = __dirname + '/../upload';
+    form.keepExtensions = true;
+
+    form
+        .on('error', function(err)  {
+            console.log('err');
+            throw err;
+        })
+        .on('field', function(field, value) {
+            console.log("field: " + field, "value: " + value);
+            if(field == "post_title") {
+                title = value;
+            }
+            else if(field == "post_content")    {
+                content = value;
+            }
+        })
+        // file renaming start
+        .on('fileBegin', function(name, file)   {
+            file.path = form.uploadDir + "/" + file.name;
+            file_name = file.name;
+        })
+        .on('file', function(field, file)   {
+            //console.log(file);
+        })
+        .on('progress', function(bytesReceived, bytesExpected)  {
+            console.log('progress');
+            var percent = (bytesReceived / bytesExpected * 100) | 0;
+            process.stdout.write('Uploadining: %' + percent + '\r');
+        })
+        .on('end', function(req, res)   {
+            console.log('form end:\n\n');
+        });
+
+    form.parse(req,function(err)    {
+        pool.getConnection(function (err, connection) {
+            //var sql = "INSERT INTO post_data(post_title, post_content, username, post_date) VALUES('"+ title +"','" + content +"','"+session_name+"',NOW())";
+            var sql = "INSERT INTO post_data(post_title, post_content, username, post_date, post_file) VALUES('"+ title +"','" + content +"','"+session_name+"',NOW(), '" + file_name + "')";
+            connection.query(sql, function (err, rows) {
+                if (err) console.error("err : " + err);
+                res.redirect('list');
+                connection.release();
+            });
+        });
+    });
+
+    /*
     var data = [req.body.post_title, req.body.post_content, session_name, req.body.post_num];
     console.log("rows : " + data);
     console.log("post_title: " + req.body.post_title);
@@ -160,6 +219,7 @@ router.post('/save', function(req,res,next){
             connection.release();
         });
     });
+     */
 });
 
 router.post('/save_edit', function(req,res,next){
@@ -220,5 +280,18 @@ router.get('/edit', function(req,res,next){
         });
     });
 });
+//파일 다운로드
+router.get('/file_save', function(req, res, next)   {
+    var filename = req.param("file_name");
+    filepath = __dirname + '/../upload/' + filename;
+    res.download(filepath);
+    /*
+    mimetype = mime.lookup(file_name);
+    res.setHeader('Content-disposition', 'attachment; file_name=' + file_name);
+    res.setHeader('Content-type', mimetype);
+    var filestream = fs.createReadStream(file);
+    filestream.pipe(res);
+     */
+})
 
 module.exports=router;

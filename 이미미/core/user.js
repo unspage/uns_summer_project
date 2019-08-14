@@ -48,14 +48,32 @@ User.prototype = {
         });
     },
 
-    mylist : function(userinfo, callback) //게시판 목록
+
+    p_list : function(user, callback) //사진 목록
+    {       
+        let sql = `SELECT u.username, p.path, p.p_title, p.title FROM photo AS p JOIN USERS AS u ON u.id=p.id ORDER BY p.num DESC`;//게시판 목록 가져옴
+
+        pool.query(sql, user, function(err, result) {
+ 
+            if(err) throw err;
+            
+           //if(result.length) {
+                callback(result);
+            //}
+            //else {
+               // callback(null);
+           // }/
+        });
+    },
+    
+    
+
+    read : function(num, callback) //게시판 하나하나읽기
     {   
-
-        console.log(userinfo.id);
-        let sql = `SELECT expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id}`;//게시판 목록 가져옴
+        console.log(num);
+        let sql = `SELECT u.username, b.title, b.content, b.views, b.date FROM board AS b JOIN USERS AS u ON b.id=u.id WHERE b.num=${num}`;
         
-        pool.query(sql, userinfo, function(err, result) {
-
+        pool.query(sql, num, function(err, result) {
             if(err) throw err;
 
             if(result.length) {
@@ -67,7 +85,23 @@ User.prototype = {
         });
     },
 
-    plusmylist : function(userinfo, callback) //게시판 목록
+
+    mylist : function(userinfo, callback) //지출게시판 목록
+    {   
+
+        console.log(userinfo.id);
+        let sql = `SELECT expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id}`;//게시판 목록 가져옴
+        
+        pool.query(sql, userinfo, function(err, result) {
+
+            if(err) throw err;
+
+                callback(result);
+
+        });
+    },
+
+    plusmylist : function(userinfo, callback) //수입게시판 목록
     {   
 
         console.log(userinfo.id);
@@ -76,13 +110,7 @@ User.prototype = {
         pool.query(sql, userinfo, function(err, result) {
 
             if(err) throw err;
-
-            if(result.length) {
-                callback(result);
-            }
-            else {
-                callback(null);
-            }
+            callback(result);
         });
     },
 
@@ -107,7 +135,35 @@ User.prototype = {
         });
     },
 
+    PHOTO : function(body, callback) //사진 추가
+    {
+        var bind = [];
 
+        for(prop in body){
+            bind.push(body[prop]);
+        }
+        
+        let sql = `INSERT INTO photo(id, path, p_title, title) VALUES (?, ?, ?, ?)`;
+       
+        pool.query(sql, bind, function(err, result) {
+            if(err) throw err;
+        
+            callback(result.insertId);
+        });
+    },
+
+    photo_delete: function(upload_delete,callback)  //사진삭제
+    {
+        console.log(upload_delete.p_title);
+        console.log(upload_delete.id);
+        let sql = "delete from photo where id='"+upload_delete.id+"'and p_title like '"+upload_delete.p_title+"'";
+        pool.query(sql, upload_delete, function(err, result) {
+            if(err) throw err;
+           console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
 
     writing : function(body, callback)  //글쓰기
     {
@@ -127,7 +183,34 @@ User.prototype = {
         });
     
     },
+    edit_writing : function(editwriteInput, callback)  //글수정
+    {
+        //var inputtitle=body.title;
+        //body.title=inputtitle;
+        //var inputcontent=body.content;
+        //body.content=inputcontent;
+        //var inputid=body.id;
+        //body.id=inputid;
+        //var inputnum=body.number;
+        //body.number=inputnum;
+        //var bind = [];
+      
+        //for(prop in body){
+         //   bind.push(body[prop]);
+        //}
+        console.log(editwriteInput);
+        console.log(editwriteInput.title);
+        console.log(editwriteInput.content);
+        console.log(editwriteInput.id);
+        console.log(editwriteInput.num);
+        let sql = "UPDATE board SET title='"+editwriteInput.title+"', content='"+editwriteInput.content+"' where id='"+editwriteInput.id+"' and num='"+editwriteInput.num+"'";
+        pool.query(sql, editwriteInput, function(err, result) {
+            if(err) throw err;
 
+            callback(result.id);
+        });
+    
+    },
     infowriting : function(body, callback)  //가계부지출내역기록
     {
 
@@ -146,8 +229,6 @@ User.prototype = {
         });
     
     },
-
-
 
     plusinfowriting : function(body, callback)  //가계부지출내역기록
     {
@@ -212,6 +293,18 @@ User.prototype = {
         pool.query(sql, bind, function(err, result) {
             if(err) throw err;
             console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+    board_delete: function(board_delete,callback)  //게시판 삭제
+    {
+        console.log(board_delete.num);
+        console.log(board_delete.id);
+        let sql = "delete from board where num='"+board_delete.num+"' and id='"+ board_delete.id+"'";
+        pool.query(sql, board_delete, function(err, result) {
+            if(err) throw err;
+           console.log(result.id); 
             callback(result.id);
         });
     

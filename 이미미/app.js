@@ -23,6 +23,7 @@ app.use(session({
 
 app.use('/', pageRouter);
 
+app.use('/upload', express.static('uploads'));
 
 app.use((req, res, next) =>  {//404에러처리 핸들러
     var err = new Error('Page not found');

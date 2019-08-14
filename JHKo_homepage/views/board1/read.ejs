@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>board</title>
@@ -26,13 +25,17 @@
         <td class="text-center">내용</td>
         <td><%=row.post_content%></td>
     </tr>
+    <tr>
+        <td class="text-center">이미지</td>
+        <td><a href='/board1/file_save?file_name=<%=row.post_file%>'><%=row.post_file%></a></td>
+    </tr>
     </tbody>
 </table>
 <a class="btn btn-dark" href="#" onclick="history.back(-1)">목록</a>
 
 <div class="btn-group float-right" role="group" aria-label="post_btn_group">
-    <button type="button" class="btn btn-dark" onclick="location.href='/board1/delete?post_num=<%=row.post_num%>'">삭제</button>
     <button type="button" class="btn btn-dark" onclick="location.href='/board1/edit?post_num=<%=row.post_num%>'">수정</button>
+    <button type="button" class="btn btn-dark" onclick="location.href='/board1/delete?post_num=<%=row.post_num%>'">삭제</button>
 </div>
 <!--
 <a class="btn btn-dark float-right" href='/board1/delete?post_num=<%=row.post_num%>'>삭제</a>
