@@ -46,6 +46,24 @@ create table its_good (
 -- 기본키가 아닌 칼럼을 WHERE절에서 사용하기 위해
 set sql_safe_updates = 0;
 
+-- its_good 테이블의 데이터 중복 제거 (1개만)
+DELETE
+FROM its_good
+WHERE idx IN (
+    SELECT idx
+    FROM (
+		SELECT idx
+        FROM post
+        GROUP BY user_id, post_idx
+        HAVING count(*) > 1
+	) temp_table
+) 
+
+-- 좋아요 초기화
+truncate its_good;
+update post set good=0;
+
+
 select * from users;
 select * from post;
 

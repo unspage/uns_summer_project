@@ -55,11 +55,15 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 /********************* Page Management ***********************/
+// page count
+var cnt = 0;    
+
 // 첫 화면.
 app.get('/', function(req, res) {
     console.log('==== index');
-    
-    doQuery("select * from post order by idx desc", function(results) {
+    cnt = 0;
+
+    doQuery("select * from post order by idx desc limit 15", function(results) {
         if (req.session.user) {
             console.log('로그인: ' + req.session.user.id);
             res.render('index', {me: req.session.user.id, post: results});
@@ -68,6 +72,17 @@ app.get('/', function(req, res) {
             console.log('비로그인');
             res.render('index', {me: '', post: results});
         }
+        cnt++;
+    });
+});
+
+// 스크롤을 내리면서 post 추가요청
+app.get('/index/morePost', function(req, res) {
+    console.log('==== /index/morePost');
+
+    doQuery('select * from post order by idx desc limit ' + cnt*15 + ',15', function(results) {
+        res.send(results);
+        cnt++;
     });
 });
 
@@ -100,17 +115,12 @@ app.post('/login', function(req, res) {
             }
             // 로그인 성공
             else {
-                var sql_good = "select post_idx from its_good where user_id='" + post.id +"';";
-                doQuery(sql_good, function(result) {
-                    req.session.user = {
-                        id: post.id,
-                        pw: post.pwd,
-                        good_list: result,
-                        authorized: true
-                    };
-                    console.log('로그인 성공: ', req.session.user);
-                    res.redirect('/');
-                }) 
+                req.session.user = {
+                    id: post.id,
+                    authorized: true
+                };
+                console.log('로그인 성공: ', req.session.user);
+                res.redirect('/');
             }
         });
 
@@ -277,16 +287,22 @@ app.get('/post/:idx', function(req, res) {
         doQuery(sql_comment, function(result2) {
             if (req.session.user) {
                 console.log('로그인: ' + req.session.user.id);
-                res.render('post', {me: req.session.user.id, 
-                    post: result1[0],
-                    comment: result2 }
-                );
+
+                var sql_good = "select * from its_good where user_id='" + req.session.user.id + "';";
+                doQuery(sql_good, function(result3) {
+                    res.render('post', {me: req.session.user.id, 
+                        post: result1[0],
+                        comment: result2,
+                        is_good: isGood(result3, req.params.idx)}
+                    );
+                });
             }
             else {
                 console.log('비로그인');
                 res.render('post', {me: '', 
                     post: result1[0],
-                    comment: result2 }
+                    comment: result2,
+                    is_good: false}
                 );
             }
         });
@@ -343,7 +359,7 @@ app.get('/post/:idx/comment/delete', function(req, res) {
         res.status(302).send("<script>alert('권한이 없습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
     }
     else {
-        var sql = "delete from comments where idx=" + req.params.comm_idx + ";";
+        var sql = "delete from comments where idx=" + get.comm_idx + ";";
         doQuery(sql, function(result) {
             if (result.affectedRows != 0) {
                 res.status(302).send("<script>alert('댓글이 삭제되었습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
@@ -356,16 +372,22 @@ app.get('/post/:idx/comment/delete', function(req, res) {
 app.get('/mypage/:id', function(req, res) {
     console.log('==== /mypage/:id');
     var sql = "select * from post where writer='" + req.params.id + "';";
-    doQuery(sql, function(result) {
-        res.render('mypage', {
-            me: req.session.user.id,
-            writer: req.params.id, 
-            post: result
-        });
+    doQuery(sql, function(result1) {
+
+        var liked_sql = "select * from post where idx in (select post_idx from its_good where user_id='" + req.params.id + "');";;
+        doQuery(liked_sql, function(result2) {
+            res.render('mypage', {
+                me: req.session.user.id,
+                writer: req.params.id, 
+                post: result1,
+                liked: result2 }
+            );
+        })
+
     });
 });
 
-// Post 좋아요
+// 게시물 좋아요
 app.get('/post/:idx/good', function(req, res) {
     console.log('==== /post/:idx/good');
 
@@ -373,27 +395,10 @@ app.get('/post/:idx/good', function(req, res) {
         console.log('비로그인');
         res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
     }
-    else if (req.session.user.good_list.includes(req.params.idx)) {
-        console.log('좋아요 취소');
 
-        req.session.user.good_list.forEach(function(item) {
-
-        });
-
-        var sql_good = "delete from its_good where post_idx=" + req.params.idx + ";";
-        doQuery(sql_good, function(result) {
-            if (result.length == 0) {
-                res.status(400).send('No Result Error');
-            }
-            else {
-                var sql_goodCount = "update post set good=good-1 where idx=" + req.params.idx + ";";
-                doQuery(sql_goodCount, function(result) {
-                    res.redirect('.');
-                });
-            }
-        });
-    }
     else {
+        console.log('게시물 좋아요');
+
         var sql_good = "insert into its_good(user_id, post_idx) values ('" + req.session.user.id + "', " + req.params.idx + ");";
         doQuery(sql_good, function(result) {
             if (result.length == 0) {
@@ -402,12 +407,30 @@ app.get('/post/:idx/good', function(req, res) {
             else {
                 var sql_goodCount = "update post set good=good+1 where idx=" + req.params.idx + ";";
                 doQuery(sql_goodCount, function(result) {
-    
-                    res.redirect('.');
+                    
+                    res.redirect('/post/' + req.params.idx);
                 });
             }
         });
     }
+});
+
+// 게시물 좋아요 취소
+app.get('/post/:idx/bad', function(req, res) {
+    console.log('==== /post/:idx/bad');
+
+    var sql_good = "delete from its_good where post_idx=" + req.params.idx + ";";
+    doQuery(sql_good, function(result) {
+        if (result.length == 0) {
+            res.status(400).send('No Result Error');
+        }
+        else {
+            var sql_goodCount = "update post set good=good-1 where idx=" + req.params.idx + ";";
+            doQuery(sql_goodCount, function(result) {
+                res.redirect('/post/' + req.params.idx);
+            });
+        }
+    });
 });
 
 // Web Server 시작.
@@ -415,7 +438,9 @@ app.listen(3000, function() {
     console.log("Express server. http://localhost:3000/")
 })
 
-// SQL을 실행시키고 결과를 처리하는 함수
+
+/********************** function made by me **************************/
+// SQL을 실행시키고 결과를 처리(func)하는 함수
 function doQuery(sql, func) {
     pool.getConnection(function(err, conn) {
         if (err) {
@@ -439,4 +464,16 @@ function doQuery(sql, func) {
         }
         conn.release();
     });
+}
+
+// 이 게시물(kwd)에 좋아요를 눌렀나
+function isGood(result, kwd) {
+    for (var x in result) {
+        console.log("IN for loop: ", result[x]['post_idx']);
+        if(result[x]['post_idx'] == kwd) {
+            return true;
+        }
+    }
+    console.log("OUT for loop");
+    return false;
 }

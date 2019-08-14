@@ -6,11 +6,13 @@
   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   
   <!-- Custom styles for this template -->
-  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
+  <link href="/css/mycss.css" rel="stylesheet" type="text/css">
   <link href="/css/index.css" rel="stylesheet" type="text/css">
-</head>
 
-<script src="/js/index.js"></script>
+  <!-- 무한 스크롤을 위해 JQuery 이용 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="/js/index.js"></script>
+</head>
 
 <style>
 .order {
@@ -19,21 +21,23 @@
 </style>
 
 <body onload="resizeAllGridItems()">
+
   <!-- Page Content -->
   <div class="container">
         
-    <header>
-      <% include ./header %>
-    </header>
-    <hr class="mb-2">
+    <header><% include ./header %></header>
+    <hr class="mb-4">
 
     <!--TODO 리스트처럼 시간순이 선택되면 추천순은 선택안되고 하는 시스템. 선택된 것은 글씨 굵게.-->
+    <!--
     <div class="order font-weight-light">
       <b><</b> <a href="#">시간 순 </a>&nbsp;&nbsp;
       <a href="#">추천 순 </a> <b>></b>
     </div>
+    -->
 
-    <div class="row text-center text-lg-left">
+    <div class="row text-center text-lg-left" id="images">
+
       <!-- DB에 저장된 게시글 출력 -->
       <% post.forEach(function(item) { %>
       <div class="col-lg-3 col-md-4 col-6">
@@ -42,10 +46,12 @@
         </a>
       </div>
       <% }); %>
+      
     </div>
+    <!-- /.row -->
 
   </div>
-    <!-- /.container -->
-</body>
+  <!-- /.container -->
 
+</body>
 </html>

@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     
     <!-- Custom styles for this template -->
-    <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
+    <link href="/css/mycss.css" rel="stylesheet" type="text/css">
     <link href="/css/index.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -16,17 +16,15 @@
     <!-- Page Content -->
     <div class="container">
     
-        <header>
-            <% include ./header %>
-        </header>
+        <header><% include ./header %></header>
         <hr> 
         
+        <!-- 내가 쓴 게시글 출력 -->
         <h3 class="font-weight-light text-center text-lg-left mt-4 mb-0">
             Posts of <span style="color: #007bff"><%= writer %></span>
         </h3><br>
 
         <div class="row text-center text-lg-left">
-            <!-- 내가 쓴 게시글 출력 -->
             <% post.forEach(function(item) { %>
             <div class="col-lg-3 col-md-4 col-6">
                 <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
@@ -36,7 +34,22 @@
             <% }); %>
         </div>
         <hr>
-         
+
+        <!-- 좋아요 표시한 게시글 -->
+        <h3 class="font-weight-light text-center text-lg-left mt-4 mb-0">
+            Liked Post of <span style="color: #007bff"><%= writer %></span>
+        </h3><br>
+        <div class="row text-center text-lg-left">
+            <% liked.forEach(function(item) { %>
+            <div class="col-lg-3 col-md-4 col-6">
+                <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
+                    <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
+                </a>
+            </div>
+            <% }); %>
+        </div>
+        <hr>
+
     </div>
     <!-- /.container -->
     

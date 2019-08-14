@@ -5,8 +5,8 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="post">
+  <meta name="author" content="minho-jang">
 
   <title>gallery</title>
 
@@ -16,7 +16,7 @@
   
   <!-- Custom styles for this template -->
   <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
-  <link href="/css/tag_a.css" rel="stylesheet" type="text/css">
+  <link href="/css/mycss.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -27,27 +27,23 @@
       <!-- Post Content Column -->
       <div class="col-lg-8">
         <!-- Title -->
-        <header>
-          <% include ./header %>
-        </header>
+        <header><% include ./header %></header>
         <hr>
         
         <!-- writer / datetime -->
-        <div class="lead">Posted by
+        <div class="lead">
+          Posted by
           <a class="link_writer" href="/mypage/<%= post.writer %>"><%= post.writer %></a>
           <% if (post.writer == me) { %>
-            <span class="post_delete">
+            <div class="post_delete">
               <button type="button" class="btn btn-success btn_delete" onclick='location.href="/post/<%= post.idx %>/update/form"'>글 수정</button>
               <button type="button" class="btn btn-danger btn_delete" onclick='location.href="/post/<%= post.idx %>/delete"'>글 삭제</button>
-            </span>
+            </div>
           <% } %>
           <br>          
           <%= post.upTime %>
-          <div style="float: right;">
-            GOOD <%= post.good %>
-          </div>  
-        </div>
 
+        </div>
         <hr>
 
         <!-- Preview Image http://placehold.it/900x300-->
@@ -59,13 +55,18 @@
         <p class="lead" id="content">
           <%- post.content.replace(/\r\n/g, "<br>") %>
         </p>
-        <hr>
+        <hr> 
 
         <!-- 좋아요 -->
-        <!--TODO 좋아요 버튼 또는 이미지-->
-        <div style="text-align: center">
-          <button type="button" class="btn btn-primary" onclick="location.href='/post/<%=post.idx %>/good'">GOOD</button>
-        </div>
+        <% if(is_good) { %> 
+          <div style="text-align: center">
+            <button type="button" class="btn btn-primary" onclick="location.href='/post/<%=post.idx %>/bad'">LIKE <%= post.good %></button>
+          </div>  
+        <% } else { %>
+          <div style="text-align: center">
+            <button type="button" class="btn btn-light" onclick="location.href='/post/<%=post.idx %>/good'">LIKE <%= post.good %></button>
+          </div> 
+        <% } %>
 
         <!-- Comments Form -->
         <div class="card my-4">
@@ -92,7 +93,7 @@
 
             <h5 class="mt-0"><%= item.writer %> &nbsp;&nbsp;<span class="comment_time"><%= item.upTime %></span>
               <div style="float: right">
-                <button type="button" onclick='location.href="/post/<%= post.idx %>/comment/delete?writer=<%= item.writer %>"' class="btn btn-danger btn_delete">삭제</button>
+                <button type="button" onclick='location.href="/post/<%= post.idx %>/comment/delete?writer=<%= item.writer %>&comm_idx=<%= item.idx%>"' class="btn btn-danger btn_delete">삭제</button>
               </div>
             </h5>
             <div>

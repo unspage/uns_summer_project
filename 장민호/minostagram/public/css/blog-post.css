@@ -21,7 +21,9 @@
   color: rgb(59, 59, 59);
   background-color: rgb(211, 211, 211);
   border-color: rgb(211, 211, 211);
+  margin: 0 0 0 5px
 }
 .post_delete {
+  display: inline-flex;
   float: right;
 }
