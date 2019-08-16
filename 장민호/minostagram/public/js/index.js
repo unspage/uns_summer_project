@@ -50,122 +50,129 @@
 
 (function($){
 
-    $.fn.endlessScroll = function(options) {
-  
-      var defaults = {
-        bottomPixels: 50,
-        fireOnce: true,
-        fireDelay: 150,
-        loader: "<br />Loading...<br />",
-        data: "",
-        insertAfter: "div:last",
-        resetCounter: function() { return false; },
-        callback: function() { return true; },
-        ceaseFire: function() { return false; }
-      };
-  
-      var options = $.extend({}, defaults, options);
-  
-      var firing       = true;
-      var fired        = false;
-      var fireSequence = 0;
-  
-      if (options.ceaseFire.apply(this) === true) {
-        firing = false;
-      }
-  
-      if (firing === true) {
-        $(this).scroll(function() {
-          if (options.ceaseFire.apply(this) === true) {
-            firing = false;
-            return; // Scroll will still get called, but nothing will happen
-          }
-  
-          if (this == document || this == window) {
-            var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
-          } else {
-            // calculates the actual height of the scrolling container
-            var inner_wrap = $(".endless_scroll_inner_wrap", this);
-            if (inner_wrap.length == 0) {
-              inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
-            }
-            var is_scrollable = inner_wrap.length > 0 &&
-              (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
-          }
-  
-          if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
-            if (options.resetCounter.apply(this) === true) fireSequence = 0;
-  
-            fired = true;
-            fireSequence++;
-  
-            $(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
-  
-            data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
-  
-            if (data !== false) {
-              $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
-              $("div#endless_scroll_data").hide().fadeIn();
-              $("div#endless_scroll_data").removeAttr("id");
-  
-              options.callback.apply(this, [fireSequence]);
-  
-              if (options.fireDelay !== false || options.fireDelay !== 0) {
-                $("body").after("<div id=\"endless_scroll_marker\"></div>");
-                // slight delay for preventing event firing twice
-                $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
-                  $(this).remove();
-                  fired = false;
-                });
-              }
-              else {
-                fired = false;
-              }
-            }
-  
-            $("div#endless_scroll_loader").remove();
-          }
-        });
-      }
+  $.fn.endlessScroll = function(options) {
 
+    var defaults = {
+      bottomPixels: 50,
+      fireOnce: true,
+      fireDelay: 150,
+      loader: "<br />Loading...<br />",
+      data: "",
+      insertAfter: "div:last",
+      resetCounter: function() { return false; },
+      callback: function() { return true; },
+      ceaseFire: function() { return false; }
     };
-    // $.fn.endlessScroll END
-})(jQuery);
 
-// Script
-$(document).ready(function() {
-    $(document).endlessScroll({
-        inflowPixels: 300,
-        callback: function() {
-          $.get("/index/morePost", function(data, status) {
-            console.log(data);
-            data.forEach(function(item) {
-              var $imgs = '<div class="col-lg-3 col-md-4 col-6">' +
-              '<a href="/post/' + item.idx + '" class="d-block mb-4 h-100">' +
-              '<img class="img-fluid img-thumbnail" src="/' + item.img_path + '" alt="">' +
-              '</a></div>';
-              $('#images').append($imgs);
-            });
-          });
-          // 추가로 Post를 가져온 후 재정렬
-          resizeAllGridItems();
+    var options = $.extend({}, defaults, options);
+
+    var firing       = true;
+    var fired        = false;
+    var fireSequence = 0;
+
+    if (options.ceaseFire.apply(this) === true) {
+      firing = false;
+    }
+
+    if (firing === true) {
+      $(this).scroll(function() {
+        if (options.ceaseFire.apply(this) === true) {
+          firing = false;
+          return; // Scroll will still get called, but nothing will happen
         }
-    });
-});
+
+        if (this == document || this == window) {
+          var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
+        } else {
+          // calculates the actual height of the scrolling container
+          var inner_wrap = $(".endless_scroll_inner_wrap", this);
+          if (inner_wrap.length == 0) {
+            inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
+          }
+          var is_scrollable = inner_wrap.length > 0 &&
+            (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
+        }
+
+        if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
+          if (options.resetCounter.apply(this) === true) fireSequence = 0;
+
+          fired = true;
+          fireSequence++;
+
+          $(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
+
+          data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
+
+          if (data !== false) {
+            $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
+            $("div#endless_scroll_data").hide().fadeIn();
+            $("div#endless_scroll_data").removeAttr("id");
+
+            options.callback.apply(this, [fireSequence]);
+
+            if (options.fireDelay !== false || options.fireDelay !== 0) {
+              $("body").after("<div id=\"endless_scroll_marker\"></div>");
+              // slight delay for preventing event firing twice
+              $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
+                $(this).remove();
+                fired = false;
+              });
+            }
+            else {
+              fired = false;
+            }
+          }
+
+          $("div#endless_scroll_loader").remove();
+        }
+      });
+    }
+
+  };
+  // $.fn.endlessScroll END
+})(jQuery);
+// Endless Scroll 대신 더보기 버튼으로 하려고 함.
+// 위에 JavaScript 코드는 쓰이지 않는다.
+
+
 
 // 벽돌식 레이아웃을 구현하기 위해 높히를 계산하여 재정렬함.
 function resizeGridItem(item){
-    grid = document.getElementsByClassName("row")[0];
-    rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
-    rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
-    rowSpan = Math.ceil((item.querySelector('.d-block.mb-4.h-100').getBoundingClientRect().height+rowGap)/(rowHeight+rowGap));
-    item.style.gridRowEnd = "span "+ rowSpan;
-}
-function resizeAllGridItems(){
-    allItems = document.getElementsByClassName("col-lg-3 col-md-4 col-6");
-    for(x = 0; x < allItems.length ; x++){
-       resizeGridItem(allItems[x]);
-    }
+  grid = document.getElementsByClassName("row")[0];
+  rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+  rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+  rowSpan = Math.ceil((item.querySelector('.d-block.mb-4.h-100').getBoundingClientRect().height+rowGap)/(rowHeight+rowGap));
+  item.style.gridRowEnd = "span "+ rowSpan;
 }
 
+function resizeAllGridItems(){
+  allItems = document.getElementsByClassName("col-lg-3 col-md-4 col-6");
+  for(x = 0; x < allItems.length ; x++){
+     resizeGridItem(allItems[x]);
+  }
+}
+
+// window 사이즈가 바뀔 때, document가 로드될 때 post들을 재정렬
 window.addEventListener("resize", resizeAllGridItems);
+window.addEventListener("load", resizeAllGridItems);
+
+// JQuery 실행 부분
+$(document).ready(function(){
+  $('.morePost').on('click', function() {
+    requestMorePost();    // TODO post를 가져온 후에 재정렬해야 되는데
+    resizeAllGridItems(); // 비동기적인 방식때문에 실행순서가 맘처럼 안돼
+  });
+});
+
+// 추가적인 post를 받아와서 document에 붙히는 역할
+function requestMorePost() {
+  $.get("/index/morePost", function(data, status) {
+    data.forEach(function(item) {
+      var $imgs = '<div class="col-lg-3 col-md-4 col-6">' +
+      '<a href="/post/' + item.idx + '" class="d-block mb-4 h-100">' +
+      '<img class="img-fluid img-thumbnail" src="/' + item.img_path + '" alt="">' +
+      '</a></div>';
+      $('#images').append($imgs);
+    });
+  });
+}

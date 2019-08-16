@@ -17,6 +17,9 @@
   <!-- Custom styles for this template -->
   <link href="/css/blog-post.css" rel="stylesheet" type="text/css">
   <link href="/css/mycss.css" rel="stylesheet" type="text/css">
+
+  <!-- 아이콘 -->
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 
 <body>
@@ -60,11 +63,15 @@
         <!-- 좋아요 -->
         <% if(is_good) { %> 
           <div style="text-align: center">
-            <button type="button" class="btn btn-primary" onclick="location.href='/post/<%=post.idx %>/bad'">LIKE <%= post.good %></button>
+            <button type="button" class="btn btn-danger" onclick="location.href='/post/<%=post.idx %>/bad'">
+              <i class="far fa-heart"></i>&nbsp; <%= post.good %>
+            </button>
           </div>  
         <% } else { %>
           <div style="text-align: center">
-            <button type="button" class="btn btn-light" onclick="location.href='/post/<%=post.idx %>/good'">LIKE <%= post.good %></button>
+            <button type="button" class="btn btn-light" onclick="location.href='/post/<%=post.idx %>/good'">
+              <i class="far fa-heart"></i>&nbsp; <%= post.good %>
+            </button>
           </div> 
         <% } %>
 

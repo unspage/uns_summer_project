@@ -55,8 +55,10 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 /********************* Page Management ***********************/
-// page count
-var cnt = 0;    
+
+// paging variable
+var cnt = 0;
+var post_cnt = 0;
 
 // 첫 화면.
 app.get('/', function(req, res) {
@@ -74,16 +76,29 @@ app.get('/', function(req, res) {
         }
         cnt++;
     });
+
+    doQuery('select count(*) as pc from post', function(result) {
+        post_cnt = result[0].pc;
+        
+    })
 });
 
 // 스크롤을 내리면서 post 추가요청
 app.get('/index/morePost', function(req, res) {
     console.log('==== /index/morePost');
 
-    doQuery('select * from post order by idx desc limit ' + cnt*15 + ',15', function(results) {
-        res.send(results);
-        cnt++;
-    });
+    if (post_cnt < cnt*15) {
+        res.send('');
+    }
+    
+    else {
+        doQuery('select * from post order by idx desc limit ' + cnt*15 + ',15', function(results) {
+            res.send(results);
+            if (post_cnt > cnt*15) {
+                cnt++;
+            }
+        });
+    }
 });
 
 // 로그인 요청
@@ -371,13 +386,19 @@ app.get('/post/:idx/comment/delete', function(req, res) {
 // 마이 페이지
 app.get('/mypage/:id', function(req, res) {
     console.log('==== /mypage/:id');
+
     var sql = "select * from post where writer='" + req.params.id + "';";
     doQuery(sql, function(result1) {
 
         var liked_sql = "select * from post where idx in (select post_idx from its_good where user_id='" + req.params.id + "');";;
         doQuery(liked_sql, function(result2) {
+            var logged_in = "";
+            if (req.session.user) {
+                logged_in = req.session.user.id;
+            }
+
             res.render('mypage', {
-                me: req.session.user.id,
+                me: logged_in,
                 writer: req.params.id, 
                 post: result1,
                 liked: result2 }
