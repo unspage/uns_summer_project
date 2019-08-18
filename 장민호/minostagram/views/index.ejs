@@ -8,10 +8,12 @@
   <!-- Custom styles for this template -->
   <link href="/css/mycss.css" rel="stylesheet" type="text/css">
   <link href="/css/index.css" rel="stylesheet" type="text/css">
-
-  <!-- 무한 스크롤을 위해 JQuery 이용 -->
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- 이미지가 load된 후에 처리를 위한 import-->
+  <script src="js/imagesLoaded.min.js"></script>
   <script src="/js/index.js"></script>
+
 </head>
 
 <style>
@@ -20,7 +22,7 @@
 }
 </style>
 
-<body onload="resizeAllGridItems()">
+<body>
 
   <!-- Page Content -->
   <div class="container">
@@ -40,8 +42,8 @@
 
       <!-- DB에 저장된 게시글 출력 -->
       <% post.forEach(function(item) { %>
-      <div class="col-lg-3 col-md-4 col-6">
-        <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
+      <div class="image_card col-lg-3 col-md-4 col-6">
+        <a href="/post/<%= item.idx%>" class="post_img d-block mb-4 h-100">
           <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
         </a>
       </div>
@@ -49,8 +51,10 @@
       
     </div>
     <!-- /.row -->
-
-    <button type="button" class="morePost">more</button>
+    
+    <div style="text-align: center; margin: 80px 0 80px 0;">
+      <button type="button" id="morePost" class="btn btn-info">more</button>
+    </div>
   </div>
   <!-- /.container -->
 

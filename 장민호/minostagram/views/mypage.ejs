@@ -8,9 +8,10 @@
     <!-- Custom styles for this template -->
     <link href="/css/mycss.css" rel="stylesheet" type="text/css">
     <link href="/css/index.css" rel="stylesheet" type="text/css">
-</head>
 
-<script src="/js/index.js"></script>
+    <script src="js/images.min.js"></script>
+    <script src="/js/index.js"></script>
+</head>
 
 <body onload="resizeAllGridItems()">
     <!-- Page Content -->
@@ -26,8 +27,8 @@
 
         <div class="row text-center text-lg-left">
             <% post.forEach(function(item) { %>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
+            <div class="image_card col-lg-3 col-md-4 col-6">
+                <a href="/post/<%= item.idx%>" class="post_img d-block mb-4 h-100">
                     <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
                 </a>
             </div>
@@ -41,8 +42,8 @@
         </h3><br>
         <div class="row text-center text-lg-left">
             <% liked.forEach(function(item) { %>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="/post/<%= item.idx%>" class="d-block mb-4 h-100">
+            <div class="image_card col-lg-3 col-md-4 col-6">
+                <a href="/post/<%= item.idx%>" class="post_img d-block mb-4 h-100">
                     <img class="img-fluid img-thumbnail" src="/<%= item.img_path %>" alt="">
                 </a>
             </div>
