@@ -5,7 +5,7 @@
     margin: auto;
 }
 .card {
-    min-width: 400px;
+    min-width: 450px;
 }
 .id {
     padding-inline-start: 8px;
@@ -21,7 +21,7 @@
     padding-inline-start: 8px;
 }
 .col {
-    width: 100px;
+    width: 150px;
     text-align: left;
 }
 .table_row {

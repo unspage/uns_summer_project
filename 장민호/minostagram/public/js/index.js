@@ -1,3 +1,4 @@
+// Chrome은 되지만 explorer는 정렬이 안되네 ㅎ;;
 // 벽돌식 레이아웃을 구현하기 위해 높히를 계산하여 재정렬함.
 function resizeGridItem(item){
   grid = document.getElementsByClassName("row")[0];
@@ -30,17 +31,23 @@ function requestMorePost() {
     type: "GET",
     url: "/index/morePost",
     success: function(data, status) {
-      data.forEach(function(item) {
-        var imgs = '<div class="image_card col-lg-3 col-md-4 col-6">' +
-        '<a href="/post/' + item.idx + '" class="post_img d-block mb-4 h-100">' +
-        '<img class="img-fluid img-thumbnail" src="/' + item.img_path + '" alt="">' +
-        '</a></div>';
-
-        // img가 로드되면 grid 재정렬
-        $('img').imagesLoaded(resizeAllGridItems);
-
-        $('#images').append(imgs);
-      });
+      if(data == 'end') {
+        alert('불러올 게시물이 없습니다.');
+      }
+      else {
+        data.forEach(function(item) {
+          var imgs = '<div class="image_card col-lg-3 col-md-4 col-6">' +
+          '<a href="/post/' + item.idx + '" class="post_img d-block mb-4 h-100">' +
+          '<img class="img-fluid img-thumbnail" src="/' + item.img_path + '" alt="">' +
+          '</a></div>';
+  
+          // img가 로드되면 grid 재정렬
+          $('img').imagesLoaded(resizeAllGridItems);
+  
+          $('#images').append(imgs);
+        });
+      }
+      
     },
   });
 }

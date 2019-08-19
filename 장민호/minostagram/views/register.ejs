@@ -11,8 +11,10 @@
   <link href="/css/mycss.css" rel="stylesheet" type="text/css">
 </head>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
-    function check() {
+    
+    function input_check() {
         if (register.id.value == "") {
             alert("아이디를 입력해 주세요.");
             return false;
@@ -29,9 +31,38 @@
             alert("전화번호를 입력해 주세요.");
             return false;
         }
+        else if (register.pwd.value != register.pwd_check.value) {
+            alert("비밀번호가 다릅니다.");
+            return false;
+        }
+        else if (id_dupCheck() == false) {
+            alert("이미 존재하는 아이디 입니다.");
+            return false;
+        }
+        
         else return true;
     }
+
+    function id_dupCheck() {
+        $.ajax({
+            url: "/register/dupCheck/" + $('#input_id').val(),
+            success: function (data) {
+                console.log('data:', data)
+
+                if (data == 'ok') return true;
+                else return false;
+            }
+        });
+    }
 </script>
+
+<style>
+.dupCheck {
+    font-size: 9pt;
+    padding: 5px;
+    margin-left: 10px;
+}
+</style>
 
 <body>
     <!-- Page Content -->
@@ -48,17 +79,24 @@
                 <h5 class="card-header">회원가입</h5>
                 <div class="card-body">
 
-                    <form action="/register" name="register" method="post" onsubmit="return check()">
+                    <form action="/register" name="register" method="post" onsubmit="return input_check()">
                         <table align="center">
                             <tr class="table_row">
                                 <td class="col">ID</td>
-                                <td style="text-align: left;"><input type="text" name="id" maxlength="20" class="input_text"></td>
-                                <!-- TODO 아이디 중복 확인 -->
+                                <td style="text-align: left;">
+                                    <input type="text" name="id" maxlength="20" class="input_text" id="input_id">
+                                </td>
                             </tr>
                             <tr class="table_row">
                                 <td class="col">PW</td>
                                 <td style="text-align: left;"><input type="password" name="pwd" maxlength="20" class="input_text"></td>
-                                <!-- TODO 회원가입 시 비밀번호 두 번 입력으로 확인 필요-->
+                            </tr>
+                            <tr class="table_row">
+                                <td class="col">PW Check</td>
+                                <td style="text-align: left;"><input type="password" name="pwd_check" maxlength="20" class="input_text"></td>
+                            </tr>
+                            <tr>
+                                <td><br/</td>
                             </tr>
                             <tr class="table_row">
                                 <td class="col">Name</td>
@@ -70,7 +108,7 @@
                             </tr>
                             <tr class="table_row">
                                 <td colspan="2">
-                                    <button type="submit" class="btn btn-primary" style="margin-top: 10px">Sign up</button>
+                                    <button type="submit" class="btn btn-primary" style="margin-top: 20px">Sign up</button>
                                 </td>
                             </tr>
                         </table>

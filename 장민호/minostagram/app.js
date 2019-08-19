@@ -1,5 +1,6 @@
 /**
  * @author minho-jang
+ * XSS, SQL Injection.
  */
 
 /****************** Setting *******************/
@@ -9,6 +10,7 @@ var app = express();
 var qs = require('querystring');
 var mysql = require('mysql');
 var session = require('express-session');
+var xss = require('xss');
 
 // bootstrap 사용.
 gulp.build();
@@ -17,10 +19,11 @@ gulp.build();
 app.set('view engine','ejs');
 
 // 세션 설정.
-app.use(session({   
+app.use(session({
+    name: 'sessionID',   
     secret: '@@keykey',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
 }));
 
 // 경로 설정.
@@ -88,7 +91,7 @@ app.get('/index/morePost', function(req, res) {
     console.log('==== /index/morePost');
 
     if (post_cnt < cnt*15) {
-        res.send('');
+        res.send("end");
     }
     
     else {
@@ -107,6 +110,7 @@ app.get('/login/form', function(req, res) {
     res.render('login');
 });
 
+// TODO 로그인 횟수 제한 (무분별한 로그인 시도 제한)
 // 로그인 시도
 app.post('/login', function(req, res) {
     console.log('==== login');
@@ -119,9 +123,11 @@ app.post('/login', function(req, res) {
     req.on('end', function() {
         var post = qs.parse(buf);
         console.log('입력된 로그인 정보:', post.id, post.pwd);
-        
-        var sql = "select * from users where user_id='" + post.id + 
-                    "' and " + "user_pwd='" + post.pwd + "';";
+        // 'or'1'='1
+        var sql = "select * from users where user_id=? and user_pwd=?;";
+        var inserts = [post.id, post.pwd];
+        sql = mysql.format(sql, inserts);
+
         doQuery(sql, function(results) {
             // 로그인 실패
             if (results.length === 0) {
@@ -162,19 +168,43 @@ app.post('/register', function(req, res) {
         var post = qs.parse(buf);
         console.log('입력된 회원가입 정보:', post.id, post.pwd);
 
-        var sql = "insert into users(user_id, user_pwd, user_name, phone) values ('" + 
-                post.id + "', '" + post.pwd + "', '" + post.name + "', '" + 
-                post.phone0 + "-" + post.phone1 + "-" + post.phone2 + "');";
-        doQuery(sql, function(result) {
-            if (result.affectedRows != 0) {
-                console.log('회원가입 성공: ' + post.id);
-                res.status(302).send("<script>alert('회원가입 완료. 다시 로그인 해주세요'); window.location.href='http://localhost:3000/';</script>");
-            }
+        var sql = "insert into users(user_id, user_pwd, user_name, phone) " + 
+                "values (?, ?, ?, ?);";
+        var inserts = [post.id, post.pwd, post.name, post.phone0+'-'+post.phone1+'-'+post.phone2];
+        sql = xss(mysql.format(sql, inserts));
 
-            else {
-                console.error('SQL Insert Error: ' + err);
-            }
-        });
+        try {
+            doQuery(sql, function(result) {
+                if (result.affectedRows != 0) {
+                    console.log('회원가입 성공: ' + post.id);
+                    res.status(302).send("<script>alert('회원가입 완료. 다시 로그인 해주세요'); window.location.href='http://localhost:3000/';</script>");
+                } else {
+                    console.error('SQL Insert Error: ' + err);
+                }
+            });
+        } catch(e) {
+            res.send("<script>alert('error message:'," + e.code + "); window.location.href='http://localhost:3000/';</script>");
+        }
+        
+    });
+});
+
+// 아이디 중복확인
+app.get('/register/dupCheck/:id', function(req, res) {
+    console.log('==== register/dupCheck');
+
+    var sql = "select * from users where user_id=?;";
+    var inserts = [req.params.id];
+    sql = mysql.format(sql, inserts);
+
+    doQuery(sql, function(result) {
+        console.log('아이디 중복 확인: ' + result);
+
+        if (result.length != 0) {
+            res.send('no');
+        } else {
+            res.send('ok');
+        }
     });
 });
 
@@ -219,7 +249,7 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
 
     if (! req.file) {
         console.log('no img file');
-        res.status(302).send("<script>alert('선택된 이미지가 없습니다.'); window.location.href='http://localhost:3000/';</script>");
+        res.status(302).send("<script>alert('선택된 이미지가 없습니다.'); window.location.href='http://localhost:3000/edit';</script>");
     }
     else {
         // 이미지파일 경로 문자열을 저장하는데 필요
@@ -227,9 +257,10 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
         filepath = filepath.substr(7).replace(/\\/g, "\/");
 
         var sql = "insert into post(writer, content, upTime, img_path)" + 
-                " values('" + req.session.user.id + "', '" + req.body.content + 
-                "', now(), '" + filepath + "');";
-
+                " values(?, ?, now(), ?);";
+        var inserts = [req.session.user.id, req.body.content, filepath];
+        sql = xss(mysql.format(sql, inserts));
+        
         doQuery(sql, function(result) {
             if (result.affectedRows != 0) {
                 console.log('게시글 저장 완료:', result);
@@ -251,15 +282,18 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
 
     if (! req.file) {
         // 사진을 변경하지 않음
-        sql = "update post set upTime=now(), content='" + req.body.content + "' where idx=" + req.params.idx + ";";
+        sql = "update post set upTime=now(), content=? where idx=?;";
+        var inserts = [req.body.content, req.params.idx];
+        sql = mysql.format(sql, inserts);
     }
     else {
         // 이미지 파일경로를 문자열로 저장하는데 필요
         var filepath = req.file.path;
         filepath = filepath.substr(7).replace(/\\/g, "\/");
 
-        sql = "update post set upTime=now(), content='" + req.body.content + "', img_path='" +
-            filepath + "' where idx=" + req.params.idx + ";";
+        sql = "update post set upTime=now(), content='?', img_path=? where idx=?;";
+        var inserts = [req.body.content, filepath, req.params.idx];
+        sql = mysql.format(sql, inserts)
     }
 
     doQuery(sql, function(result) {
@@ -268,7 +302,7 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
             res.status(302).send("<script>alert('게시글 수정 완료'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
         }
         else {
-            console.error('SQL Insert Error: ' + err);
+            console.error('SQL Update Error: ' + err);
             res.send(400);
         }
     });
@@ -278,7 +312,9 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
 app.get('/post/:idx/update/form', upload.single('img'), function(req, res) {
     console.log('==== /post/:idx/update/form');
     
-    var sql = "select * from post where idx=" + req.params.idx + ";";
+    var sql = "select * from post where idx=?;";
+    var inserts = [req.params.idx];
+    sql = mysql.format(sql, inserts);
 
     doQuery(sql, function(result) {
         res.render('post_update', {
@@ -295,15 +331,24 @@ app.get('/post/:idx', function(req, res) {
 
     console.log('Request Parameter:', req.params.idx);
 
-    var sql_post = "select * from post where idx=" + req.params.idx + ";";
+    var sql_post = "select * from post where idx=?;";
+    var inserts = [req.params.idx];
+    sql_post = mysql.format(sql_post, inserts);
+
     doQuery(sql_post, function(result1) {
 
-        var sql_comment = "select * from comments where post_idx=" + req.params.idx + ";";
+        var sql_comment = "select * from comments where post_idx=?;";
+        inserts = [req.params.idx];
+        sql_comment = mysql.format(sql_comment, inserts);
+        
         doQuery(sql_comment, function(result2) {
             if (req.session.user) {
                 console.log('로그인: ' + req.session.user.id);
 
-                var sql_good = "select * from its_good where user_id='" + req.session.user.id + "';";
+                var sql_good = "select * from its_good where user_id=?;";
+                inserts = [req.session.user.id];
+                sql_good = mysql.format(sql_good, inserts);
+
                 doQuery(sql_good, function(result3) {
                     res.render('post', {me: req.session.user.id, 
                         post: result1[0],
@@ -336,8 +381,10 @@ app.get('/post/:idx/comment/', function(req, res) {
         res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
     }
     else {
-        var sql = "insert into comments(post_idx, writer, content, upTime) values(" + 
-            req.params.idx + ", '" + req.session.user.id + "', '" + get.content + "', now());";
+        var sql = "insert into comments(post_idx, writer, content, upTime) " + 
+                "values(?, ?, ?, now());";
+        var inserts = [req.params.idx, req.session.user.id, get.content];
+        sql = xss(mysql.format(sql, inserts));
 
         doQuery(sql, function(result) {
             if (result.length != 0) {
@@ -354,7 +401,10 @@ app.get('/post/:idx/comment/', function(req, res) {
 app.get('/post/:idx/delete', function(req, res) {
     console.log("==== /post/:idx/delete");
 
-    var sql = "delete from post where idx=" + req.params.idx + ";";
+    var sql = "delete from post where idx=?;";
+    var inserts = [req.params.idx];
+    sql = mysql.format(sql, inserts);
+
     doQuery(sql, function(result) {
         if (result.affectedRows != 0) {
             res.status(302).send("<script>alert('글이 삭제되었습니다.'); window.location.href='http://localhost:3000/';</script>");
@@ -374,7 +424,10 @@ app.get('/post/:idx/comment/delete', function(req, res) {
         res.status(302).send("<script>alert('권한이 없습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
     }
     else {
-        var sql = "delete from comments where idx=" + get.comm_idx + ";";
+        var sql = "delete from comments where idx=?;";
+        var inserts = [get.comm_idx];
+        sql = mysql.format(sql, inserts);
+
         doQuery(sql, function(result) {
             if (result.affectedRows != 0) {
                 res.status(302).send("<script>alert('댓글이 삭제되었습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
@@ -387,10 +440,16 @@ app.get('/post/:idx/comment/delete', function(req, res) {
 app.get('/mypage/:id', function(req, res) {
     console.log('==== /mypage/:id');
 
-    var sql = "select * from post where writer='" + req.params.id + "';";
+    var sql = "select * from post where writer=?;";
+    var inserts = [req.params.id];
+    sql = mysql.format(sql, inserts);
+
     doQuery(sql, function(result1) {
 
-        var liked_sql = "select * from post where idx in (select post_idx from its_good where user_id='" + req.params.id + "');";;
+        var liked_sql = "select * from post where idx in (select post_idx from its_good where user_id=?);";;
+        inserts = [req.params.id];
+        liked_sql = mysql.format(liked_sql, inserts);
+
         doQuery(liked_sql, function(result2) {
             var logged_in = "";
             if (req.session.user) {
@@ -420,13 +479,19 @@ app.get('/post/:idx/good', function(req, res) {
     else {
         console.log('게시물 좋아요');
 
-        var sql_good = "insert into its_good(user_id, post_idx) values ('" + req.session.user.id + "', " + req.params.idx + ");";
+        var sql_good = "insert into its_good(user_id, post_idx) values (?, ?);";
+        var inserts = [req.session.user.id, req.params.idx];
+        sql_good = xss(mysql.format(sql_good, inserts));
+
         doQuery(sql_good, function(result) {
             if (result.length == 0) {
                 res.status(400).send('No Result Error');
             }
             else {
                 var sql_goodCount = "update post set good=good+1 where idx=" + req.params.idx + ";";
+                inserts = [req.params.idx];
+                sql_goodCount = mysql.format(sql_goodCount, inserts);
+
                 doQuery(sql_goodCount, function(result) {
                     
                     res.redirect('/post/' + req.params.idx);
@@ -440,13 +505,19 @@ app.get('/post/:idx/good', function(req, res) {
 app.get('/post/:idx/bad', function(req, res) {
     console.log('==== /post/:idx/bad');
 
-    var sql_good = "delete from its_good where post_idx=" + req.params.idx + ";";
+    var sql_good = "delete from its_good where post_idx=?;";
+    var inserts = [req.params.idx];
+    sql_good = mysql.format(sql_good, inserts);
+
     doQuery(sql_good, function(result) {
         if (result.length == 0) {
             res.status(400).send('No Result Error');
         }
         else {
-            var sql_goodCount = "update post set good=good-1 where idx=" + req.params.idx + ";";
+            var sql_goodCount = "update post set good=good-1 where idx=?;";
+            inserts = [req.params.idx];
+            sql_goodCount = mysql.format(sql_goodCount, inserts);
+            
             doQuery(sql_goodCount, function(result) {
                 res.redirect('/post/' + req.params.idx);
             });

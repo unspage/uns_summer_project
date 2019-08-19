@@ -1,5 +1,5 @@
-var num = [1, 2, 3, 4, 5];
 
-if (num.includes(2)) {
-  console.log(num);
-}
+var xss = require('xss');
+
+var html = xss('<script>alert("xss test");</script>');
+console.log(html);
