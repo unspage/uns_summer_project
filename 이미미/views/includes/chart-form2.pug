@@ -1,0 +1,16 @@
+-var chartlist = info
+div
+  table.table.table-hover
+   thead
+     tr: th chartlist
+     th(scope='cols' style="width:10%") category
+     th(scope='cols' style="width:10%") price
+     th(scope='cols' style="width:10%") year
+     th(scope='cols' style="width:10%") month
+   tbody
+     each info in charts
+       tr
+         td=info.category
+         td=info.ss
+         td=info.yy
+         td=info.bb

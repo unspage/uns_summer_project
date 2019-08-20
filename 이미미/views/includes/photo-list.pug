@@ -4,14 +4,16 @@ div
    thead
      th(style="width:10%") ID
      th(style="width:10%") 제목
-
+     th(style="width:3%") 다운로드
      th(style="width:3%") 삭제
    tbody
      each photo in photos
        tr
          td=photo.username
          td
-            a(href ='/upload/'+ photo.p_title) #{photo.title} 
+            a(href ='/upload/'+ photo.p_title) #{photo.title}
+         td 
+            a(href='/upload/'+ photo.p_title download) 다운로드
          td
             form(method="post" action="/upload/delete/"+photo.p_title)
                 input(type="submit" value="DELETE")

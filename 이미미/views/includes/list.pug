@@ -5,7 +5,7 @@ div
      tr: th 게시판
      th(scope='cols' style="width:10%") ID
      th(scope='cols' style="width:10%") 제목
-     th(scope='cols' style="width:5%") 조회수
+     
      th(scope='cols' style="width:15%") 날짜
      th(scope='cols' style="width:3%") 수정
      th(scope='cols' style="width:3%") 삭제
@@ -16,7 +16,7 @@ div
          td=board.username 
          td
             a(href ='/board/'+board.num) #{board.title}
-         td=board.views
+
          td=board.date
          td
             a(href='board/edit/'+board.num) 수정

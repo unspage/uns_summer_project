@@ -6,7 +6,8 @@ const pool = mysql.createPool({//mysql연결
     host: 'localhost',
     user: 'root', 
     password: '3819', 
-    database: 'nodejs_login'
+    database: 'nodejs_login',
+    dateStrings: 'date'
 });
 
 pool.getConnection((err, connection) => {

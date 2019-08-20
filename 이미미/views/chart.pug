@@ -1,0 +1,36 @@
+extends layout
+
+mixin message(opp, name)
+    if(opp)
+        h1.greeting welcome board
+            span=name     
+
+append links 
+     
+    li(style="float: right;")
+        a(href="/logout") Logout 
+    
+block content
+    .dashboard 
+        .user 
+            +message(opp, name)
+    .infowrite-panel
+        li(style="float: left;")
+            a(href="/expense") 지출내역
+        li(style="float: left;")
+            a(href="/import") 수입내역
+        li(style="float: left;")
+            a(href="/chart") 월별통계
+    .write-panel
+         include includes/chart-select-form
+
+
+
+        
+
+append links 
+    li(style="float: right;")
+        a(href="/mypage") 정보수정
+    li(style="float: right;")
+        a(href="/infowrite") 가계부기록
+

@@ -114,6 +114,21 @@ User.prototype = {
         });
     },
 
+    chart_select : function(chart_select, callback) //차트
+    {   
+
+        console.log(chart_select.id);
+        console.log(chart_select.year);
+        console.log(chart_select.month);
+        //let sql = "SELECT category, sum(price) as ss FROM info WHERE id='"+ chart_select.id+ "'and month(date)= '" + chart_select.month+ "' GROUP BY category'";
+       // let sql = "SELECT category, sum(price) as ss FROM info WHERE id='"+ chart_select.id+ "'and year(date)= '"+chart_select.year +"'and month(date)= '" + chart_select.month+ "' GROUP BY category'";
+       let sql = `SELECT category, sum(price) as ss, year(date) as yy, month(date) as bb FROM info WHERE id= ${chart_select.id} and year(date)=${chart_select.year} and month(date)=${chart_select.month} GROUP BY category`;
+        pool.query(sql, chart_select, function(err, result) {
+            console.log(result.length);
+            if(err) throw err;
+            callback(result);
+        });
+    },
 
     create : function(body, callback) //회원가입
     {
@@ -185,19 +200,6 @@ User.prototype = {
     },
     edit_writing : function(editwriteInput, callback)  //글수정
     {
-        //var inputtitle=body.title;
-        //body.title=inputtitle;
-        //var inputcontent=body.content;
-        //body.content=inputcontent;
-        //var inputid=body.id;
-        //body.id=inputid;
-        //var inputnum=body.number;
-        //body.number=inputnum;
-        //var bind = [];
-      
-        //for(prop in body){
-         //   bind.push(body[prop]);
-        //}
         console.log(editwriteInput);
         console.log(editwriteInput.title);
         console.log(editwriteInput.content);

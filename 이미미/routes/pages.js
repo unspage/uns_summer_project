@@ -5,6 +5,9 @@ const Board =require('../core/user');
 var multer = require('multer')
 var upload = multer({ dest: "uploads/"});
 var fs=require('fs');
+var csvWriter = require('csv-write-stream')
+var writer = csvWriter()
+
 
 //var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
 var storage = multer.diskStorage({
@@ -30,6 +33,13 @@ router.get('/', (req, res, next) => {
     
 })//맨 처음 시작 화면
 
+// router.get('/out.csv', (req, res, next) => {
+//     let user = req.session.user;
+
+//     res.render('chart2',{charts: result});
+    
+// })
+
 router.post('/upload', upload.single('userfile'), function(req, res){
 
     let photoinput={
@@ -46,6 +56,50 @@ router.post('/upload', upload.single('userfile'), function(req, res){
 
    })
   });
+
+  router.get('/chart',(req, res,next)=>{//카테고리별 목록
+    let userinfo = req.session.user;
+
+   if(user){
+    res.render('chart',{title:"날짜 입력"});
+
+    return;
+}
+res.redirect('/chart')
+
+    
+});
+
+
+  router.post('/chart', (req, res, next) => {//차트 언제 달 선택할지
+    
+    let chart_select = {
+        id:req.session.user.id,
+        //year: req.body.year,
+        year:req.body.year,
+        month:req.body.month
+        
+    };//입력한 내용
+  
+    console.log(chart_select);
+    //createWriteStream
+    user.chart_select (chart_select, function(result) {
+        if(result){
+        writer.pipe(fs.createWriteStream('out.csv'))
+        for(var i=0;i<result.length;i++){
+        writer.write({price:result[i].ss});
+        //writer.write({ chart:result[i].ss})
+    }
+        res.render('chart2', {charts: result});
+        console.log(result[0]);
+        writer.end()
+        
+    }
+    })
+
+});
+
+
 
 router.get('/home', (req, res, next) => {
     let user = req.session.user;
@@ -156,6 +210,8 @@ router.get('/expense',(req, res,next)=>{//로그인 되어있는 회원의 지�
 
 });
 
+
+
 router.get('/import',(req, res,next)=>{//로그인 되어있는 회원의 수입내역
     let userinfo = req.session.user;
 
@@ -166,17 +222,7 @@ router.get('/import',(req, res,next)=>{//로그인 되어있는 회원의 수입
         })
 
 });
-/*
-router.get('/read',(req, res,next)=>{//게시판 글 보여주기
-    if(user){
-        res.render('board_edit',{title:"정보수정"});
- 
-        return;
-    }
-   res.redirect('/home');
-       
-});
-*/
+
 router.post('/login', (req, res, next) => {//로그인이라는 행동을 함 
     
     user.login(req.body.username, req.body.password, function(result) {
@@ -269,8 +315,6 @@ router.post('/board/delete/:num', (req, res, next) => {
  });
 
  router.post('/upload/delete/:p_title', (req, res, next) => {
-    //let p_title=req.params.p_title;
-    //let id= req.session.user.id;
 
     let upload_delete = {
         
@@ -278,8 +322,6 @@ router.post('/board/delete/:num', (req, res, next) => {
         id:req.session.user.id
     };
      console.log(upload_delete);
-     //console.log(id);
-    //console.log(deleteInput);
     
      user.photo_delete(upload_delete,function(insertid) {
          req.body.id = insertid;
@@ -347,6 +389,7 @@ router.post('/plusinfowriting', (req, res, next) => {//가계부수입내역작�
     });
 
 });
+
 
 router.post('/withdrawal', (req, res, next) => {//회원탈퇴
     
