@@ -123,7 +123,7 @@ app.post('/login', function(req, res) {
     req.on('end', function() {
         var post = qs.parse(buf);
         console.log('입력된 로그인 정보:', post.id, post.pwd);
-        // 'or'1'='1
+        // 'or '1'='1
         var sql = "select * from users where user_id=? and user_pwd=?;";
         var inserts = [post.id, post.pwd];
         sql = mysql.format(sql, inserts);
@@ -132,7 +132,7 @@ app.post('/login', function(req, res) {
             // 로그인 실패
             if (results.length === 0) {
                 console.log('로그인 실패: ' + post.id);
-                res.status(302).send("<script>alert('로그인 실패. 다시 입력해주세요.'); window.location.href='http://localhost:3000/login/form';</script>");
+                res.status(302).send("<script>alert('로그인 실패. 다시 입력해주세요.'); window.location.href='/login/form';</script>");
             }
             // 로그인 성공
             else {
@@ -177,13 +177,13 @@ app.post('/register', function(req, res) {
             doQuery(sql, function(result) {
                 if (result.affectedRows != 0) {
                     console.log('회원가입 성공: ' + post.id);
-                    res.status(302).send("<script>alert('회원가입 완료. 다시 로그인 해주세요'); window.location.href='http://localhost:3000/';</script>");
+                    res.status(302).send("<script>alert('회원가입 완료. 다시 로그인 해주세요'); window.location.href='/';</script>");
                 } else {
                     console.error('SQL Insert Error: ' + err);
                 }
             });
         } catch(e) {
-            res.send("<script>alert('error message:'," + e.code + "); window.location.href='http://localhost:3000/';</script>");
+            res.send("<script>alert('error message:'," + e.code + "); window.location.href='/';</script>");
         }
         
     });
@@ -239,7 +239,7 @@ app.get('/edit', function(req, res) {
     }
     else {
         // 로그인하지 않고 글을 쓸 수 없음.
-        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='http://localhost:3000/login/form';</script>");
+        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='/login/form';</script>");
     }
 });
 
@@ -249,7 +249,7 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
 
     if (! req.file) {
         console.log('no img file');
-        res.status(302).send("<script>alert('선택된 이미지가 없습니다.'); window.location.href='http://localhost:3000/edit';</script>");
+        res.status(302).send("<script>alert('선택된 이미지가 없습니다.'); window.location.href='/edit';</script>");
     }
     else {
         // 이미지파일 경로 문자열을 저장하는데 필요
@@ -264,7 +264,7 @@ app.post('/edit/post_up', upload.single('img'), function(req, res) {
         doQuery(sql, function(result) {
             if (result.affectedRows != 0) {
                 console.log('게시글 저장 완료:', result);
-                res.status(302).send("<script>alert('게시글 저장 완료'); window.location.href='http://localhost:3000/';</script>");
+                res.status(302).send("<script>alert('게시글 저장 완료'); window.location.href='/';</script>");
             }
             else {
                 console.error('SQL Insert Error: ' + err);
@@ -299,7 +299,7 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
     doQuery(sql, function(result) {
         if (result.affectedRows != 0) {
             console.log('게시글 수정 완료:', result);
-            res.status(302).send("<script>alert('게시글 수정 완료'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+            res.status(302).send("<script>alert('게시글 수정 완료'); window.location.href='/post/" + req.params.idx + "';</script>");
         }
         else {
             console.error('SQL Update Error: ' + err);
@@ -378,7 +378,7 @@ app.get('/post/:idx/comment/', function(req, res) {
 
     if (! req.session.user) {
         console.log('비로그인');
-        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='/post/" + req.params.idx + "';</script>");
     }
     else {
         var sql = "insert into comments(post_idx, writer, content, upTime) " + 
@@ -388,7 +388,7 @@ app.get('/post/:idx/comment/', function(req, res) {
 
         doQuery(sql, function(result) {
             if (result.length != 0) {
-                res.status(302).send("<script>alert('댓글이 등록되었습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+                res.status(302).send("<script>alert('댓글이 등록되었습니다.'); window.location.href='/post/" + req.params.idx + "';</script>");
             }
             else {
                 res.sendStatus(400);
@@ -407,7 +407,7 @@ app.get('/post/:idx/delete', function(req, res) {
 
     doQuery(sql, function(result) {
         if (result.affectedRows != 0) {
-            res.status(302).send("<script>alert('글이 삭제되었습니다.'); window.location.href='http://localhost:3000/';</script>");
+            res.status(302).send("<script>alert('글이 삭제되었습니다.'); window.location.href='/';</script>");
         }
     });
 });
@@ -421,7 +421,7 @@ app.get('/post/:idx/comment/delete', function(req, res) {
 
     // 비로그인 이거나, 글쓴이와 현재로그인 id가 다른 경우
     if (!req.session.user || get.writer != req.session.user.id) {
-        res.status(302).send("<script>alert('권한이 없습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+        res.status(302).send("<script>alert('권한이 없습니다.'); window.location.href='/post/" + req.params.idx + "';</script>");
     }
     else {
         var sql = "delete from comments where idx=?;";
@@ -430,7 +430,7 @@ app.get('/post/:idx/comment/delete', function(req, res) {
 
         doQuery(sql, function(result) {
             if (result.affectedRows != 0) {
-                res.status(302).send("<script>alert('댓글이 삭제되었습니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+                res.status(302).send("<script>alert('댓글이 삭제되었습니다.'); window.location.href='/post/" + req.params.idx + "';</script>");
             }
         });
     }
@@ -473,7 +473,7 @@ app.get('/post/:idx/good', function(req, res) {
 
     if (! req.session.user) {
         console.log('비로그인');
-        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='http://localhost:3000/post/" + req.params.idx + "';</script>");
+        res.status(302).send("<script>alert('로그인이 필요합니다.'); window.location.href='/post/" + req.params.idx + "';</script>");
     }
 
     else {
