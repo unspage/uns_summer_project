@@ -7,6 +7,9 @@ var upload = multer({ dest: "uploads/"});
 var fs=require('fs');
 var csvWriter = require('csv-write-stream')
 var writer = csvWriter()
+var csv=require('fast-csv');
+
+
 
 
 //var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
@@ -33,12 +36,6 @@ router.get('/', (req, res, next) => {
     
 })//맨 처음 시작 화면
 
-// router.get('/out.csv', (req, res, next) => {
-//     let user = req.session.user;
-
-//     res.render('chart2',{charts: result});
-    
-// })
 
 router.post('/upload', upload.single('userfile'), function(req, res){
 
@@ -56,6 +53,8 @@ router.post('/upload', upload.single('userfile'), function(req, res){
 
    })
   });
+
+
 
   router.get('/chart',(req, res,next)=>{//카테고리별 목록
     let userinfo = req.session.user;
@@ -75,24 +74,21 @@ res.redirect('/chart')
     
     let chart_select = {
         id:req.session.user.id,
-        //year: req.body.year,
         year:req.body.year,
         month:req.body.month
         
     };//입력한 내용
   
     console.log(chart_select);
-    //createWriteStream
     user.chart_select (chart_select, function(result) {
         if(result){
         writer.pipe(fs.createWriteStream('out.csv'))
         for(var i=0;i<result.length;i++){
-        writer.write({price:result[i].ss});
-        //writer.write({ chart:result[i].ss})
+            writer.write({category:result[i].category, price:result[i].ss});
+           
     }
         res.render('chart2', {charts: result});
         console.log(result[0]);
-        writer.end()
         
     }
     })
@@ -310,6 +306,35 @@ router.post('/board/delete/:num', (req, res, next) => {
      user.board_delete(board_delete,function(insertid) {
          req.body.id = insertid;
          res.redirect('/board');
+     });
+     
+ });
+ router.post('/expense/delete/:num', (req, res, next) => {
+    
+    let expense_delete = {
+        num : req.params.num,
+        id : req.session.user.id
+    };
+     console.log(expense_delete);
+     
+     user.expense_delete(expense_delete,function(insertid) {
+         req.body.id = insertid;
+         res.redirect('/expense');
+     });
+     
+ });
+
+ router.post('/import/delete/:num', (req, res, next) => {
+    
+    let import_delete = {
+        num : req.params.num,
+        id : req.session.user.id
+    };
+     console.log(import_delete);
+     
+     user.import_delete(import_delete,function(insertid) {
+         req.body.id = insertid;
+         res.redirect('/import');
      });
      
  });

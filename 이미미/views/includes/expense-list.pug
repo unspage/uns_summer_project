@@ -8,6 +8,7 @@ div
      th(scope='cols' style="width:5%") category
      th(scope='cols' style="width:15%") date
      th(scope='cols' style="width:3%") type
+     th(scope='cols' style="width:3%") 삭제
    tbody
      each info in infos
        tr
@@ -16,6 +17,9 @@ div
          td=info.category
          td=info.date
          td=info.type
+         td
+            form(method="post" action="/expense/delete/"+info.num)
+                input(type="submit" value="삭제")
 
 
          

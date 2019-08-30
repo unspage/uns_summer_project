@@ -8,6 +8,7 @@ div
      th(scope='cols' style="width:5%") 카테고리
      th(scope='cols' style="width:15%") 날짜
      th(scope='cols' style="width:3%") type
+     th(scope='cols' style="width:3%") 삭제
    tbody
      each plusinfo in plusinfos
        tr
@@ -16,6 +17,8 @@ div
          td=plusinfo.category
          td=plusinfo.date
          td=plusinfo.type
-
+         td
+            form(method="post" action="/import/delete/"+plusinfo.num)
+                input(type="submit" value="삭제")
 
          
