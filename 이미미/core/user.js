@@ -90,7 +90,7 @@ User.prototype = {
     {   
 
         console.log(userinfo.id);
-        let sql = `SELECT expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id}`;//게시판 목록 가져옴
+        let sql = `SELECT num, expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id} order by date desc`;//게시판 목록 가져옴
         
         pool.query(sql, userinfo, function(err, result) {
 
@@ -105,7 +105,7 @@ User.prototype = {
     {   
 
         console.log(userinfo.id);
-        let sql = `SELECT p_expense, p_price, category, date, type FROM plusinfo AS p JOIN USERS AS u ON p.id=u.id WHERE p.id= ${userinfo.id}`;//게시판 목록 가져옴
+        let sql = `SELECT num, p_expense, p_price, category, date, type FROM plusinfo AS p JOIN USERS AS u ON p.id=u.id WHERE p.id= ${userinfo.id} order by date desc`;//게시판 목록 가져옴
         
         pool.query(sql, userinfo, function(err, result) {
 
@@ -120,10 +120,10 @@ User.prototype = {
         console.log(chart_select.id);
         console.log(chart_select.year);
         console.log(chart_select.month);
-        //let sql = "SELECT category, sum(price) as ss FROM info WHERE id='"+ chart_select.id+ "'and month(date)= '" + chart_select.month+ "' GROUP BY category'";
-       // let sql = "SELECT category, sum(price) as ss FROM info WHERE id='"+ chart_select.id+ "'and year(date)= '"+chart_select.year +"'and month(date)= '" + chart_select.month+ "' GROUP BY category'";
+        
        let sql = `SELECT category, sum(price) as ss, year(date) as yy, month(date) as bb FROM info WHERE id= ${chart_select.id} and year(date)=${chart_select.year} and month(date)=${chart_select.month} GROUP BY category`;
-        pool.query(sql, chart_select, function(err, result) {
+      // let sql = `SELECT i.category, i.sum(price) as ss, p.category, p.sum(p_price) as pp,  i.year(date) as yy, i.month(date) as bb FROM info i, plusinfo p WHERE i.id= ${chart_select.id} and i.year(date)=${chart_select.year} and i.month(date)=${chart_select.month} GROUP BY category`; 
+       pool.query(sql, chart_select, function(err, result) {
             console.log(result.length);
             if(err) throw err;
             callback(result);
@@ -311,6 +311,33 @@ User.prototype = {
         });
     
     },
+
+    expense_delete: function(expense_delete,callback)  //지출내역삭제
+    {
+        console.log(expense_delete.num);
+        console.log(expense_delete.id);
+        let sql = "delete from info where num='"+expense_delete.num+"' and id='"+ expense_delete.id+"'";
+        pool.query(sql, expense_delete, function(err, result) {
+            if(err) throw err;
+           console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+
+    import_delete: function(import_delete,callback)  //수입내역삭제
+    {
+        console.log(import_delete.num);
+        console.log(import_delete.id);
+        let sql = "delete from info where num='"+import_delete.num+"' and id='"+ import_delete.id+"'";
+        pool.query(sql, import_delete, function(err, result) {
+            if(err) throw err;
+           console.log(result.id); 
+            callback(result.id);
+        });
+    
+    },
+
 
     login : function(username, password, callback)//로그인
     {
