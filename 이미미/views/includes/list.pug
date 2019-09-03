@@ -1,16 +1,18 @@
 -var boardlist = board
 div
+  li 게시판
   table.table.table-condensed
    thead
-     tr: th 게시판
+     tr
      th(scope='cols' style="width:10%") ID
      th(scope='cols' style="width:10%") 제목
      
-     th(scope='cols' style="width:15%") 날짜
+     th(scope='cols' style="width:10%") 날짜
      th(scope='cols' style="width:3%") 수정
      th(scope='cols' style="width:3%") 삭제
 
    tbody
+    
      each board in boards
        tr
          td=board.username 

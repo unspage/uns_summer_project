@@ -1,13 +1,13 @@
 -var infolist = info
 div
+  li 지출내역
   table.table.table-hover
    thead
-     tr: th expense_list
-     th(scope='cols' style="width:10%") expense
-     th(scope='cols' style="width:10%") price
-     th(scope='cols' style="width:5%") category
-     th(scope='cols' style="width:15%") date
-     th(scope='cols' style="width:3%") type
+     th(scope='cols' style="width:10%") 지출내역
+     th(scope='cols' style="width:10%") 지출금액
+     th(scope='cols' style="width:5%") 카테고리
+     th(scope='cols' style="width:15%") 날짜
+     th(scope='cols' style="width:3%") 결제
      th(scope='cols' style="width:3%") 삭제
    tbody
      each info in infos

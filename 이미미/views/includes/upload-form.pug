@@ -4,6 +4,7 @@ html
     meta(charset='utf-8')
   body
     form(action='upload' method='post' enctype="multipart/form-data")
+      img(src="img/photo.jpeg" width="70")
       input(type='text' name='title' placeholder='title' style="width:50px;")
       input(type='file' name='userfile')
       input(type='submit' onclick="alert('제출되었습니다');")

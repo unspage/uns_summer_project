@@ -1,13 +1,13 @@
 -var plusinfolist = plusinfo
 div
+  li 수입내역
   table.table.table-hover
    thead
-     tr: th import_list
      th(scope='cols' style="width:10%") 수입내역
      th(scope='cols' style="width:10%") 수입금액
      th(scope='cols' style="width:5%") 카테고리
      th(scope='cols' style="width:15%") 날짜
-     th(scope='cols' style="width:3%") type
+     th(scope='cols' style="width:3%") 결제
      th(scope='cols' style="width:3%") 삭제
    tbody
      each plusinfo in plusinfos

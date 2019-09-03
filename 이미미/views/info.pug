@@ -11,16 +11,17 @@ append links
         a(href="/logout") Logout 
     
 block content
-    .dashboard 
-        .user 
-            +message(opp, name)
+
     .infowrite-panel
+        
         li(style="float: left;")
             a(href="/expense") 지출내역
         li(style="float: left;")
             a(href="/import") 수입내역
         li(style="float: left;")
             a(href="/chart") 월별통계
+    .write-panel
+         include includes/sum
         
 
 append links 

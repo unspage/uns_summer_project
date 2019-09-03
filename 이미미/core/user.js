@@ -49,6 +49,7 @@ User.prototype = {
     },
 
 
+
     p_list : function(user, callback) //사진 목록
     {       
         let sql = `SELECT u.username, p.path, p.p_title, p.title FROM photo AS p JOIN USERS AS u ON u.id=p.id ORDER BY p.num DESC`;//게시판 목록 가져옴
@@ -72,7 +73,7 @@ User.prototype = {
     {   
         console.log(num);
         let sql = `SELECT u.username, b.title, b.content, b.views, b.date FROM board AS b JOIN USERS AS u ON b.id=u.id WHERE b.num=${num}`;
-        
+    
         pool.query(sql, num, function(err, result) {
             if(err) throw err;
 
@@ -93,6 +94,21 @@ User.prototype = {
         let sql = `SELECT num, expense, price, category, date, type FROM info AS i JOIN USERS AS u ON i.id=u.id WHERE i.id= ${userinfo.id} order by date desc`;//게시판 목록 가져옴
         
         pool.query(sql, userinfo, function(err, result) {
+
+            if(err) throw err;
+
+                callback(result);
+
+        });
+    },
+
+    usersum : function(id, callback) //총액
+    {   
+
+        console.log(id);
+        let sql = `SELECT sum(price) as one, sum(p_price) as two FROM info as i JOIN plusinfo AS PI on i.id=pi.id WHERE i.id=${id}`;
+        
+        pool.query(sql, id, function(err, result) {
 
             if(err) throw err;
 
@@ -122,7 +138,7 @@ User.prototype = {
         console.log(chart_select.month);
         
        let sql = `SELECT category, sum(price) as ss, year(date) as yy, month(date) as bb FROM info WHERE id= ${chart_select.id} and year(date)=${chart_select.year} and month(date)=${chart_select.month} GROUP BY category`;
-      // let sql = `SELECT i.category, i.sum(price) as ss, p.category, p.sum(p_price) as pp,  i.year(date) as yy, i.month(date) as bb FROM info i, plusinfo p WHERE i.id= ${chart_select.id} and i.year(date)=${chart_select.year} and i.month(date)=${chart_select.month} GROUP BY category`; 
+ 
        pool.query(sql, chart_select, function(err, result) {
             console.log(result.length);
             if(err) throw err;

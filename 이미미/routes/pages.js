@@ -112,18 +112,24 @@ router.get('/board',(req, res,next)=>{//게시판 목록으로 이동
   
     user.list(user, function(result){
     //req.session.user = result;
-
+    
     res.render('board', { title: "board_list", boards: result});
     })
 
 });
 
 
+
+
 router.get('/info',(req, res,next)=>{//가계부로 이동
-    //let user = req.session.user;
- 
-        res.render('info',{title:"가계부"});
+    let id = req.session.user.id;
+    console.log(id);
+    user.usersum(id,function(result){
+         res.render('info',{title:"가계부", sums:result});
+    })
+
   
+
 });
 
 router.get('/upload',(req, res,next)=>{//photo목록

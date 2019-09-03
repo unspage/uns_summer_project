@@ -11,9 +11,6 @@ append links
         a(href="/logout") Logout 
     
 block content
-    .dashboard 
-        .user 
-            +message(opp, name)
     .infowrite-panel
         li(style="float: left;")
             a(href="/expense") 지출내역
@@ -22,6 +19,7 @@ block content
         li(style="float: left;")
             a(href="/chart") 월별통계
     .write-panel
+         img(src="img/pie.jpeg" width="80" style="float: left;")
          include includes/chart-select-form
 
 

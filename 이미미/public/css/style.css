@@ -61,7 +61,7 @@ nav ul li a:hover
 {
     float: right;
 }
-.image, .join-us-img
+.image
 {
     display: block;
     margin: 0 auto;
@@ -70,7 +70,8 @@ nav ul li a:hover
 {
     margin-bottom: 20px;
 }
-.join-us-img
+
+.register
 {    
     width: 90%;   
 }
