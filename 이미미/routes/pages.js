@@ -8,9 +8,16 @@ var fs=require('fs');
 var csvWriter = require('csv-write-stream')
 var writer = csvWriter()
 var csv=require('fast-csv');
+var svgCaptcha = require('svg-captcha');
+var captcha = svgCaptcha.create();
 
-
-
+router.get('/captcha', function (req, res) {
+    var captcha = svgCaptcha.create();
+    req.session.captcha = captcha.text;
+    
+    res.type('svg');
+    res.status(200).send(captcha.data);
+});
 
 //var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
 var storage = multer.diskStorage({
@@ -300,15 +307,11 @@ router.post('/edit-writing/:num', (req, res, next) => {//미완:글 수정
 });
 
 router.post('/board/delete/:num', (req, res, next) => {
-    //let num=req.params.num;
-    //let id= req.session.user.id;
     let board_delete = {
         num : req.params.num,
         id : req.session.user.id
     };
      console.log(board_delete);
-     //console.log(id);
-    //console.log(deleteInput);
      user.board_delete(board_delete,function(insertid) {
          req.body.id = insertid;
          res.redirect('/board');

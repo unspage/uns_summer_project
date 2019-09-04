@@ -1,0 +1,50 @@
+CREATE TABLE `board` (
+  `num` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `content` varchar(100) DEFAULT NULL,
+  `views` int(11) DEFAULT '0',
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`num`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `info` (
+  `num` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(45) NOT NULL,
+  `expense` varchar(45) NOT NULL,
+  `price` int(11) NOT NULL,
+  `category` varchar(45) NOT NULL,
+  `date` date NOT NULL,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`num`),
+  UNIQUE KEY `num_UNIQUE` (`num`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `photo` (
+  `num` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(45) NOT NULL,
+  `path` varchar(45) NOT NULL,
+  `p_title` varchar(45) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  PRIMARY KEY (`num`),
+  UNIQUE KEY `num_UNIQUE` (`num`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `plusinfo` (
+  `num` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(45) NOT NULL,
+  `p_expense` varchar(45) NOT NULL,
+  `p_price` int(11) NOT NULL,
+  `category` varchar(45) NOT NULL,
+  `date` date NOT NULL,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`num`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) NOT NULL,
+  `fullname` varchar(45) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
