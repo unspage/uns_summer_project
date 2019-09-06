@@ -22,7 +22,7 @@
         
         <!-- 내가 쓴 게시글 출력 -->
         <h3 class="font-weight-light text-center text-lg-left mt-4 mb-0">
-            Posts of <span style="color: #007bff"><%= writer %></span>
+            Posts of <span style="color: #000000"><b><%= writer %></b></span>
         </h3><br>
 
         <div class="row text-center text-lg-left">
@@ -38,7 +38,7 @@
 
         <!-- 좋아요 표시한 게시글 -->
         <h3 class="font-weight-light text-center text-lg-left mt-4 mb-0">
-            Liked Post of <span style="color: #007bff"><%= writer %></span>
+            Posts marked <span style="color: #ff3535">Like</span>
         </h3><br>
         <div class="row text-center text-lg-left">
             <% liked.forEach(function(item) { %>

@@ -19,6 +19,10 @@
             alert("아이디를 입력해 주세요.");
             return false;
         }
+        else if ( id_dupCheck() == false ) {
+            alert("이미 존재하는 아이디 입니다.");
+            return false;
+        }
         else if (register.pwd.value == "") {
             alert("비밀번호를 입력해 주세요.");
             return false;
@@ -35,34 +39,23 @@
             alert("비밀번호가 다릅니다.");
             return false;
         }
-        else if (id_dupCheck() == false) {
-            alert("이미 존재하는 아이디 입니다.");
-            return false;
-        }
         
         else return true;
     }
 
     function id_dupCheck() {
-        $.ajax({
-            url: "/register/dupCheck/" + $('#input_id').val(),
-            success: function (data) {
-                console.log('data:', data)
-
-                if (data == 'ok') return true;
-                else return false;
-            }
-        });
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", "/register/dupCheck/" + $('#input_id').val(), false ); // false for synchronous request
+        xmlHttp.send( null );
+        
+        if (xmlHttp.responseText == 'ok') {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 </script>
-
-<style>
-.dupCheck {
-    font-size: 9pt;
-    padding: 5px;
-    margin-left: 10px;
-}
-</style>
 
 <body>
     <!-- Page Content -->

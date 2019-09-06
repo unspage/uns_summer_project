@@ -1,5 +1,11 @@
+function errHandler(a) {
+    if (a == 1) {
+        throw new Error('test err');
+    }
+}
 
-var xss = require('xss');
-
-var html = xss('<script>alert("xss test");</script>');
-console.log(html);
+try {
+    errHandler(1);
+} catch(e) {
+    console.log('catch e');
+}

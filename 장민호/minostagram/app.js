@@ -57,6 +57,11 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
+// TODO 예상치못한 에러 탐지
+app.use(function(err, req, res, next){
+    console.error(err);
+    res.status(500).send('unexpected error!');
+})
 /********************* Page Management ***********************/
 
 // paging variable
@@ -110,7 +115,6 @@ app.get('/login/form', function(req, res) {
     res.render('login');
 });
 
-// TODO 로그인 횟수 제한 (무분별한 로그인 시도 제한)
 // 로그인 시도
 app.post('/login', function(req, res) {
     console.log('==== login');
@@ -178,11 +182,10 @@ app.post('/register', function(req, res) {
                 if (result.affectedRows != 0) {
                     console.log('회원가입 성공: ' + post.id);
                     res.status(302).send("<script>alert('회원가입 완료. 다시 로그인 해주세요'); window.location.href='/';</script>");
-                } else {
-                    console.error('SQL Insert Error: ' + err);
                 }
             });
         } catch(e) {
+            console.error('==== error\n', e);
             res.send("<script>alert('error message:'," + e.code + "); window.location.href='/';</script>");
         }
         
@@ -198,12 +201,14 @@ app.get('/register/dupCheck/:id', function(req, res) {
     sql = mysql.format(sql, inserts);
 
     doQuery(sql, function(result) {
-        console.log('아이디 중복 확인: ' + result);
+        console.log('아이디 중복 확인: ', result);
 
         if (result.length != 0) {
-            res.send('no');
+            console.log('no');
+            res.send("no");
         } else {
-            res.send('ok');
+            console.log('ok');
+            res.send("ok");
         }
     });
 });
@@ -284,7 +289,7 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
         // 사진을 변경하지 않음
         sql = "update post set upTime=now(), content=? where idx=?;";
         var inserts = [req.body.content, req.params.idx];
-        sql = mysql.format(sql, inserts);
+        sql = xss(mysql.format(sql, inserts));
     }
     else {
         // 이미지 파일경로를 문자열로 저장하는데 필요
@@ -293,7 +298,7 @@ app.post('/post/:idx/update', upload.single('img'), function(req, res) {
 
         sql = "update post set upTime=now(), content='?', img_path=? where idx=?;";
         var inserts = [req.body.content, filepath, req.params.idx];
-        sql = mysql.format(sql, inserts)
+        sql = xss(mysql.format(sql, inserts));
     }
 
     doQuery(sql, function(result) {
@@ -532,6 +537,7 @@ app.listen(3000, function() {
 
 
 /********************** function made by me **************************/
+
 // SQL을 실행시키고 결과를 처리(func)하는 함수
 function doQuery(sql, func) {
     pool.getConnection(function(err, conn) {
@@ -541,17 +547,17 @@ function doQuery(sql, func) {
         }
         else {
             console.log('connect to gallery db');
-
             console.log('SQL: ' + sql);
 
             conn.query(sql, function(err, result) {
                 if (err) {
-                    console.error("SQL 실행 Error:", err);
-                    throw new Error('SQL 실행 Error');
+                    console.error("SQL 실행 Error");
+                    throw err;
                 }
-                console.log('SQL 실행 결과:', result);
-
-                func(result);
+                else {
+                    console.log('SQL 실행 결과:', result);
+                    func(result);
+                }
             });
         }
         conn.release();
