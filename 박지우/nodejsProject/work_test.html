@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/view" method="POST">
+        <select name="movie">
+            <% movielist.forEach(function(movie,index){ %>
+            <option value="<%=movie%>">
+                <%=movie%>
+            </option>
+            <% }) %>
+        </select>
+        <select name="location">
+            <% locationlist.forEach(function(location,index){ %>
+                <option value="<%= location %>">
+                    <%=location%>
+                </option>
+            <% }) %>
+        </select>
+        <input type="submit" value="제출">
+    </form>
+    <% if (typeof(time)!="undefined") { %>
+    <table>
+    <% time.forEach(function (time_1,index){ %>
+    <tr><td>
+        <%=time_1%>
+    </td>
+    <td>
+        <%=seat[index]%>
+    </td></tr>
+    <% }) %>
+    </table>
+    <% } %>
+</body>
+</html>

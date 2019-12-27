@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<!--
+	Projection by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Projection by TEMPLATED</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</head>
+	<body>
+
+			<script>
+// 					document.querySelector('.ajaxsend').addEventListener('click', function(){
+// 					  // 입력값 위치를 찾아 변수에 담고
+// 					  var inputdata = document.forms[0].elements[0].value;
+// 					  // sendAjax 함수를 만들고 URL과 data를 전달
+// 					  sendAjax('http://127.0.0.1:3003/view', inputdata)
+// 					})
+// 					function sendAjax(url, data){
+  
+//   // 입력값을 변수에 담고 문자열 형태로 변환
+//   var data = {'email' : data};
+//   data = JSON.stringify(data);
+
+//   // content-type을 설정하고 데이터 송신
+//   var xhr = new XMLHttpRequest();
+//   xhr.open('POST', url);
+//   xhr.setRequestHeader('Content-type', "application/json");
+//   xhr.send(data);
+  
+//   // 데이터 수신이 완료되면 표시
+//   xhr.addEventListener('load', function(){
+//     console.log(xhr.responseText);
+//   });
+// }
+getLocation = function(){
+    window.navigator.geolocation.getCurrentPosition (function(pos) {
+        // $('#latitude').html(pos.coords.latitude);     // 위도
+        // $('#longitude').html(pos.coords.longitude); // 경도
+		alert(pos.coords.latitude+" "+pos.coords.longitude);
+    });
+}
+getLocation();
+				  </script>
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="index.html" class="logo"><strong>Project</strong> by eraser</a>
+					<nav id="nav">
+						<a href="index.html">Home</a>
+						<a href="generic.html">Generic</a>
+						<a href="elements.html">Elements</a>
+					</nav>
+					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+				</div>
+			</header>
+		<!-- Banner -->
+			<section id="banner">
+				<div class="inner">
+					<header>
+						<h1>FIND THE FASTEST SCREEN TIME</h1>
+						<h2>a movie theater nearby : </h2>
+						
+					</header>
+
+					<!-- <div class="flex "> -->
+							<form action="/view" method="POST">
+								<div class="flex ">
+								<label for="movie">MOVIE</label>
+								<select name="movie">
+									<% movielist.forEach(function(movie,index){ %>
+									<option value="<%=movie%>">
+										<%=movie%>
+									</option>
+									<% }) %>
+								</select>
+								
+							
+								</div>
+								<p id="latitude"></p>
+								<p id="longitude"></p>
+								<div class="flex ">
+								<label for="movie">CGV</label>
+								<select name="location_cgv">
+									<% list_cgv.forEach(function(location,index){ %>
+										<option value="<%= location %>">
+											<%=location%>
+										</option>
+									<% }) %>
+								</select>
+								<hr>
+								<label for="movie">MEGABOX</label>
+								<select name="location_mega">
+									<% list_mega.forEach(function(location,index){ %>
+										<option value="<%= location %>">
+											<%=location%>
+										</option>
+									<% }) %>
+								</select>
+								</div>
+								<input id="button" type="submit" value="GO CHECK">
+							</form>
+						
+					<!-- </div> -->
+				</div>
+			</section>
+		<!-- Three -->
+			<section id="three" class="wrapper align-center">
+				<div class="inner">
+					<div class="flex flex-2">
+						<article>
+							<div class="image round">
+								<img src="images/cgv.png" alt="Cgv" />
+							</div>
+							<br>
+							<% if (typeof(time_cgv)!="undefined") { %>
+								<div class="spinner-border" role="status">
+										<span class="sr-only">Loading...</span>
+									  </div>
+							<% time_cgv.forEach(function (time_1,index){ %>
+								시간 : <%=time_1%> | 좌석 : <%=seat_cgv[index]%>석<br>
+							<% }) %>
+							<% } %>
+						</article>
+						<article>
+							<div class="image round">
+								<img src="images/mega.png" alt="Mega" />
+							</div>
+							<br>
+							<% if (typeof(time_mega)!="undefined") { %>
+							<% time_mega.forEach(function (time_1,index){ %>
+								시간 : <%=time_1%> | 좌석 : <%=seat_mega[index]%>석<br>
+							<% }) %>
+							<% } %>
+						</article>
+						
+					</div>
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+
+					<h3>Get in touch</h3>
+
+					<form action="#" method="post">
+
+						<div class="field half first">
+							<label for="name">Name</label>
+							<input name="name" id="name" type="text" placeholder="Name">
+						</div>
+						<div class="field half">
+							<label for="email">Email</label>
+							<input name="email" id="email" type="email" placeholder="Email">
+						</div>
+						<div class="field">
+							<label for="message">Message</label>
+							<textarea name="message" id="message" rows="6" placeholder="Message"></textarea>
+						</div>
+						<ul class="actions">
+							<li><input value="Send Message" class="button alt" type="submit"></li>
+						</ul>
+					</form>
+
+					<div class="copyright">
+						&copy; Untitled. Design: <a href="https://templated.co">TEMPLATED</a>. Images: <a href="https://unsplash.com">Unsplash</a>.
+					</div>
+
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
